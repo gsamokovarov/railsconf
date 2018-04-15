@@ -12,5 +12,6 @@
 //
 //= require rails-ujs
 //= require activestorage
+//= require reveal.js/js/reveal.js
 //= require turbolinks
 //= require_tree .

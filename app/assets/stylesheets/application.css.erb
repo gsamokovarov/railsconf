@@ -1,0 +1,38 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require reveal.js/css/reveal
+ *= require_tree .
+ *= require_self
+ */
+
+@font-face {
+  font-family: 'bt_mono';
+  src: url(<%= asset_path 'bt_mono-Bold.eot' %>);
+  src: url(<%= asset_path 'bt_mono-Bold.eot?#iefix' %>) format('embedded-opentype'),
+       url(<%= asset_path 'bt_mono-Bold.woff2' %>) format('woff2'),
+       url(<%= asset_path 'bt_mono-Bold.woff' %>) format('woff'),
+       url(<%= asset_path 'bt_mono-Bold.ttf' %>) format('truetype'),
+       url(<%= asset_path 'bt_mono-Bold.svg' %>#bt_monoregular) format('svg');
+  font-style: normal;
+  font-weight: 700; }
+
+@font-face {
+  font-family: 'DOS';
+  src: url(<%= asset_path 'Fixedsys500c.eot' %>);
+  src: local('☺'),
+       url(<%= asset_path 'Fixedsys500c.woff' %>) format('woff'),
+       url(<%= asset_path 'Fixedsys500c.ttf' %>) format('truetype'),
+       url(<%= asset_path 'Fixedsys500c.svg' %>) format('svg');
+  font-weight: normal;
+  font-style: normal; }
+

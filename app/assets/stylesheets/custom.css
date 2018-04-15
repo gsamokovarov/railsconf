@@ -1,0 +1,42 @@
+/*********************************************
+ * MISC
+ *********************************************/
+.reveal .white {
+  color: #FFFFFF; }
+
+.reveal .gray {
+  color: #777; }
+
+.reveal .big {
+  font-size: 1.9em; }
+
+.reveal pre.inline {
+  box-shadow: none; }
+
+.reveal img.inline {
+  background: transparent; border: 0; box-shadow: none; margin: 0; vertical-align: middle; }
+
+.reveal a.image {
+  text-decoration: none; }
+
+.reveal a:hover img.inline {
+  background: transparent; border: 0; box-shadow: none; }
+
+.reveal .left {
+  float: left; }
+
+.reveal .right {
+  float: right; }
+
+.reveal .hidden {
+  visibility: hidden; }
+
+.reveal pre code {
+  max-height: none; }
+
+.reveal .shadow {
+  text-shadow: 1px 1px 2px #444; }
+
+.reveal .pixel {
+  font-family: DOS, Monaco, Menlo, Consolas, "Courier New", monospace;
+  -webkit-font-smoothing: none; }

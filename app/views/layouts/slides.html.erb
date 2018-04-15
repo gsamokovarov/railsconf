@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Ruby Kaigi 2018 presentation about Web Console.">
+    <meta name="author" content="Genadi Samokovarov">
+
+    <title>Ruby Kaigi 2018</title>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <%= yield %>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      Reveal.initialize({
+        width:  '100%',
+        height: '100%',
+        margin: 0.05,
+        controls: false,
+        progress: false,
+        history: true,
+        center: false,
+        rollingLinks: false,
+        transition: 'none',
+        backgroundTransition: 'none'
+      });
+    </script>
+  </body>
+</html>
+
