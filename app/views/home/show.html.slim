@@ -1,5 +1,6 @@
 section.center data-background="#000"
-  h1.white Web Console Internals
+  h1.white Implementing Web Console
+  p.red <span class="white">by</span> Genadi Samokovarov
 
 section.center
   h2 👋
@@ -41,11 +42,17 @@ section.center
 section.center
   a(href="https://github.com/gsamokovarov") github.com/gsamokovarov
 
-section.center data-background="https://www.mapsland.com/maps/europe/bulgaria/large-location-map-of-bulgaria.jpg"
-  h2.shadow Bulgaria
+section.center
+  a href="https://rhyme.com"
+    img.inline src=image_path("rhyme.svg")
 
 section.center data-background="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/2000px-Flag_of_Bulgaria.svg.png"
   h2.white.shadow Bulgaria
+  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Bulgaria"
+
+section.center data-background="https://www.mapsland.com/maps/europe/bulgaria/large-location-map-of-bulgaria.jpg"
+  h2.shadow Bulgaria
+  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Bulgaria"
 
 section.center data-background="https://cdn2.wanderlust.co.uk/media/2637/articles-public-mineral-baths-sofia-bulgaria-dreamstime.jpg"
   h2.white.shadow Sofia
@@ -59,10 +66,11 @@ section.center data-background="https://cdn2.wanderlust.co.uk/media/2633/magazin
   h2.white.shadow Sofia
   = copyright "Wanderlust", "https://www.wanderlust.co.uk/content/short-break-guide-to-sofia-bulgaria/"
 
-section.center 
+section.center
   p А Б В Г Д Е Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ь Ю Я
   hr
-  p а б в г д е ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ь ю я 
+  p а б в г д е ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ь ю я
+  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Cyrillic_script"
 
 section.center data-background="https://upload.wikimedia.org/wikipedia/commons/9/96/20101210_014809_LactobacillusBulgaricus.jpg"
   p.white.shadow Lactobacillus delbrueckii subsp. bulgaricus
@@ -84,3 +92,515 @@ section.center data-background=image_path("dj")
 section.center data-background="#FCD846"
   a href="https://balkanruby.com"
     img.inline src=image_path("balkan.svg")
+
+section.center data-background="#2196F3"
+  a href="http://partialconf.com"
+    img.inline src=image_path("partial.svg")
+
+section.center data-background="https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg"
+  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Japan"
+
+section.center data-background="https://contra.kontek.net/games/supercnes/superc1.gif" data-background-size="50%" data-background-color="#000"
+  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
+
+section.center data-background="https://contra.kontek.net/games/supercnes/superc2.gif" data-background-size="50%" data-background-color="#000"
+  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
+
+section.center data-background="https://contra.kontek.net/games/supercnes/superc3.gif" data-background-size="50%" data-background-color="#000"
+  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
+
+section.center data-background="https://contra.kontek.net/games/supercnes/superc14.gif" data-background-size="50%" data-background-color="#000"
+  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
+
+section.center data-background="https://contra.kontek.net/games/supercnes/superc15.gif" data-background-size="50%" data-background-color="#000"
+  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
+
+section.center data-background="https://contra.kontek.net/games/supercnes/superc17.gif" data-background-size="50%" data-background-color="#000"
+  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
+
+section.center data-background="#000"
+  h2 🌍
+
+section.center data-background="https://upload.wikimedia.org/wikipedia/commons/8/8c/Terminator2game.JPG"
+  = copyright "Nintendo Famicom Clone", "https://en.wikipedia.org/wiki/Ending-Man_Terminator"
+
+section.center data-background="https://vignette.wikia.nocookie.net/contra/images/4/44/Kimkoh_-_02.png"
+  h2 💡
+  = copyright "Kimkoh", "http://contra.wikia.com/wiki/Kimkoh"
+
+section.center data-background="#000"
+  h2.white What is Web Console<span class="red">?</span>
+
+section.center data-background="#000"
+  p.white A debugger that doesn't stop the world 🌍
+
+section.center data-background="#F0F"
+  p.white An interactive puts 😎
+
+section.center data-background="#F0F"
+  = copyright "Demo", "http://localhost:3000"
+
+section.center
+  p 素晴らしいです 🤗
+
+section.center data-background="#000"
+  h2.white How does console <span class="red">?</span>
+
+section.center data-background="#F00"
+  h2.white Rack<span class="black">!</span>
+
+section.center
+  img.inline src=image_path("browser_to_rails.svg")
+
+section.center
+  img.inline src=image_path("browser_to_rails_with_web_console.svg")
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip?
+
+          if id = id_for_repl_session_update(request)
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request)
+          end
+
+          status, headers, body = @app.call(env)
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
+        end
+      end
+
+section.center
+  img.inline src=image_path("browser_to_rails_with_web_console.svg")
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      module Kernel
+        module_function
+
+        def console(binding = Bindex.current_bindings.second)
+          Thread.current[:__web_console_binding] = binding
+
+          nil
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Injector
+        def initialize(body, headers)
+          @body = "".dup
+          body.each { |part| @body << part }
+          body.close if body.respond_to?(:close)
+          @headers = headers
+        end
+
+        def inject(content)
+          @headers.delete("Content-Length")
+
+          [
+            if position = @body.rindex("</body>")
+              [ @body.insert(position, content) ]
+            else
+              [ @body << content ]
+            end,
+            @headers
+          ]
+        end
+      end
+
+section.center data-background="#000"
+  h2.white Binding
+
+section.center data-background="#000"
+  p.white Encapsulate the execution context at some particular place in the code.
+
+section.center data-background="#000"
+  p.white Retain this context for future use.
+
+section.center data-background="#000"
+  p.white Created using Kernel#binding, in Ruby-land
+
+section.center
+  p Instance variables
+
+section.center
+  p Methods
+
+section.center
+  p self
+
+section.center
+  p The current class
+
+section.center
+  p __FILE__
+
+section.center
+  p __LINE__
+
+section.center data-background="#000"
+  p.white Created using Kernel#binding, in Ruby-land
+
+section.center data-background="#000"
+  p.white Only for the current stack frame<span class="red">!</span>
+
+section.center data-background="#000"
+  p.white In Ruby-land
+
+section.center
+  p Consider this a future slide...
+
+section.center data-background="#000"
+  h2.white How does the error page works <span class="red">?</span>
+
+section.center data-background="#222"
+  p.white To learn about how error handling works in Rails...
+
+section.center data-background="#444"
+  p.white We need to learn how error handling works in <span class="red">Ruby</span>...
+
+section.center
+  p WIP
+
+section.center data-background="#000"
+  h2.white Error Handling in <span class="red">Rails</span>
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      use Rack::Sendfile
+      use ActionDispatch::Static
+      use ActionDispatch::Executor
+      use ActiveSupport::Cache::Strategy::LocalCache::Middleware
+      use Rack::Runtime
+      use Rack::MethodOverride
+      use ActionDispatch::RequestId
+      use ActionDispatch::RemoteIp
+      use Sprockets::Rails::QuietAssets
+      use Rails::Rack::Logger
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions
+      use ActionDispatch::Reloader
+      use ActionDispatch::Callbacks
+      use ActiveRecord::Migration::CheckPending
+      use ActionDispatch::Cookies
+      use ActionDispatch::Session::CookieStore
+      use ActionDispatch::Flash
+      use ActionDispatch::ContentSecurityPolicy::Middleware
+      use Rack::Head
+      use Rack::ConditionalGet
+      use Rack::ETag
+      use Rack::TempfileReaper
+      run Banitsa::Application.routes
+
+section.center
+  img.inline src=image_path("browser_to_rails_with_web_console.svg")
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      use Rack::Sendfile
+      use ActionDispatch::Static
+      use ActionDispatch::Executor
+      use ActiveSupport::Cache::Strategy::LocalCache::Middleware
+      use Rack::Runtime
+      use Rack::MethodOverride
+      use ActionDispatch::RequestId
+      use ActionDispatch::RemoteIp
+      use Sprockets::Rails::QuietAssets
+      use Rails::Rack::Logger
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions
+      use ActionDispatch::Reloader
+      use ActionDispatch::Callbacks
+      use ActiveRecord::Migration::CheckPending
+      use ActionDispatch::Cookies
+      use ActionDispatch::Session::CookieStore
+      use ActionDispatch::Flash
+      use ActionDispatch::ContentSecurityPolicy::Middleware
+      use Rack::Head
+      use Rack::ConditionalGet
+      use Rack::ETag
+      use Rack::TempfileReaper
+      run Banitsa::Application.routes
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions
+      # ...
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions 👈
+      # ...
+
+section.center data-background="#F00"
+  h2.white ActionDispatch::DebugExceptions
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def call(env)
+          request = ActionDispatch::Request.new env
+          _, headers, body = response = @app.call(env)
+
+          response
+        rescue Exception => exception
+          invoke_interceptors(request, exception)
+          raise exception unless request.show_exceptions?
+          render_exception(request, exception)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def call(env)
+          request = ActionDispatch::Request.new env
+          _, headers, body = response = @app.call(env) 👈
+
+          response
+        rescue Exception => exception
+          invoke_interceptors(request, exception)
+          raise exception unless request.show_exceptions?
+          render_exception(request, exception)
+        end
+      end
+
+section.center
+  img.inline src=image_path("browser_to_rails.svg")
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def call(env)
+          request = ActionDispatch::Request.new env
+          _, headers, body = response = @app.call(env)
+
+          response
+        rescue Exception => exception 👈
+          invoke_interceptors(request, exception)
+          raise exception unless request.show_exceptions?
+          render_exception(request, exception)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def call(env)
+          request = ActionDispatch::Request.new env
+          _, headers, body = response = @app.call(env)
+
+          response
+        rescue Exception => exception
+          invoke_interceptors(request, exception)
+          raise exception unless request.show_exceptions?
+          render_exception(request, exception) 👈
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions
+      # ...
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions 👈
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions
+      # ...
+
+section.center data-background="#F00"
+  h2.white ActionDispatch::ShowExceptions
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::ShowExceptions
+        FAILSAFE_RESPONSE = [500, { "Content-Type" => "text/plain" },
+          ["500 Internal Server Error\n" ...]
+
+        def initialize(app, exceptions_app)
+          @app = app
+          @exceptions_app = exceptions_app
+        end
+
+        def call(env)
+          request = ActionDispatch::Request.new env
+          @app.call(env)
+        rescue Exception => exception
+          if request.show_exceptions?
+            render_exception(request, exception)
+          else
+            raise exception
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::ShowExceptions
+        FAILSAFE_RESPONSE = [500, { "Content-Type" => "text/plain" },
+          ["500 Internal Server Error\n"]]
+
+        def initialize(app, exceptions_app)
+          @app = app
+          @exceptions_app = exceptions_app
+        end
+
+        def call(env)
+          request = ActionDispatch::Request.new env
+          @app.call(env)
+        rescue Exception => exception
+          if request.show_exceptions?
+            render_exception(request, exception) 👈
+          else
+            raise exception
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::ShowExceptions
+        FAILSAFE_RESPONSE = [500, { "Content-Type" => "text/plain" }, 👈
+          ["500 Internal Server Error\n"]]
+
+        def initialize(app, exceptions_app)
+          @app = app
+          @exceptions_app = exceptions_app
+        end
+
+        def call(env)
+          request = ActionDispatch::Request.new env
+          @app.call(env)
+        rescue Exception => exception
+          if request.show_exceptions?
+            render_exception(request, exception)
+          else
+            raise exception
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def render_exception_with_web_console(request, exception)
+          render_exception_without_web_console(request, exception).tap do
+            backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
+            error = ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception).exception
+
+            # Get the original exception if ExceptionWrapper decides to follow it.
+            Thread.current[:__web_console_exception] = error
+
+            # ActionView::Template::Error bypass ExceptionWrapper original
+            # exception following. The backtrace in the view is generated from
+            # reaching out to cause in the view.
+            if error.is_a?(ActionView::Template::Error)
+              Thread.current[:__web_console_exception] = error.cause
+            end
+          end
+        end
+
+        alias_method :render_exception_without_web_console, :render_exception
+        alias_method :render_exception, :render_exception_with_web_console
+      end
+
+section.center data-background="#F00"
+  h2.white 🙈 🙉 🙊
+
+section.center data-background="#F00"
+  h2.white Rails 6
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Railtie < ::Rails::Railtie
+        initializer 'web_console.initialize' do
+          ActionDispatch::DebugExceptions
+            .register_interceptor(WebConsole::Interceptor.new)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Interceptor
+        def call(request, exception)
+          backtrace_cleaner = request.get_header('action_dispatch.backtrace_cleaner')
+          error = ExceptionWrapper.new(backtrace_cleaner, exception).exception
+
+          # Get the original exception if ExceptionWrapper decides to follow it.
+          Thread.current[:__web_console_exception] = error
+
+          # ActionView::Template::Error bypass ExceptionWrapper original
+          # exception following. The backtrace in the view is generated from
+          # reaching out to original_exception in the view.
+          if error.is_a?(ActionView::Template::Error)
+            Thread.current[:__web_console_exception] = error.cause
+          end
+        end
+      end
+
+section.center data-background="#F00"
+  p.white The Interceptor API
+
+section.center data-background="#F00"
+  h2.white 🙅‍♀️ 🐒 
+
+section.center data-background="#F0F"
+  h2.white Limitations<span class="black">!</span>
+
+section.center
+  p Multi-process servers.
+
+section.center
+  p Remote Code Execution (<span class="red">RCE</span>)
+
+section.center data-background="#000"
+  h2.white 😅

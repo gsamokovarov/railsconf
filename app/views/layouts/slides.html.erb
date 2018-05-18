@@ -9,8 +9,6 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   </head>
   <body>
     <div class="reveal">
@@ -30,7 +28,16 @@
         center: false,
         rollingLinks: false,
         transition: 'none',
-        backgroundTransition: 'none'
+        backgroundTransition: 'none',
+        dependencies: [
+          {
+            src: '<%= javascript_path "/js/highlight/highlight.js" %>',
+            async: true,
+            callback: function() {
+              hljs.initHighlightingOnLoad();
+            }
+          }
+        ]
       });
     </script>
   </body>
