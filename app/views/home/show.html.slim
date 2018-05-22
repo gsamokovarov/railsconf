@@ -224,14 +224,19 @@ section.center
 section.center data-background="#000"
   h2.white Binding
 
+section.center data-background=image_path("aaron_binding.png")
+  .fragment
+    blockquote"Basically, an implementor's nightmare!"
+    p Aaron Patterson
+
 section.center data-background="#000"
   p.white Encapsulate the execution context at some particular place in the code.
 
 section.center data-background="#000"
   p.white Retain this context for future use.
 
-section.center data-background="#000"
-  p.white Created using Kernel#binding, in Ruby-land
+section.center
+  p Local variables
 
 section.center
   p Instance variables
@@ -252,13 +257,238 @@ section.center
   p __LINE__
 
 section.center data-background="#000"
-  p.white Created using Kernel#binding, in Ruby-land
+  p.white Binding#<span class="red">eval</span> <span class="fragment">👈</span>
 
 section.center data-background="#000"
-  p.white Only for the current stack frame<span class="red">!</span>
+  p.white Usually created using Kernel#binding.
 
 section.center data-background="#000"
-  p.white In Ruby-land
+  p.white Created <strong>only</strong> for the current thread stack frame!
+
+section.center data-background="#000"
+  p.white Keeps a reference to <span class="red">everything</span> the current context can touch.
+
+section.center
+  h2 🤔
+
+section.center
+  h2 Binding#pry
+  p binding.pry
+
+section.center
+  h2 Binding#irb
+  p binding.irb
+
+section.center data-background="#000"
+  h2.white Binding#console
+  p.white binding.console
+
+section.center data-background="#000"
+  h2 😅
+
+section.center
+  h2 Kernel#console
+  p console
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      module Kernel
+        module_function
+
+        def console(binding = Bindex.current_bindings.second)
+          Thread.current[:__web_console_binding] = binding
+
+          nil
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      module Kernel
+        module_function
+
+        def console(binding = Bindex.current_bindings.second) 👈
+          Thread.current[:__web_console_binding] = binding
+
+          nil
+        end
+      end
+
+section.center data-background="#000"
+  h2.white Kernel#caller
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      &gt;&gt; puts caller
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/workspace.rb:85:in `eval'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/workspace.rb:85:in `evaluate'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/context.rb:380:in `evaluate'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:491:in `block (2 levels) in eval_input'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:621:in `signal_status'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:488:in `block in eval_input'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:246:in `block (2 levels) in each_top_level_statement'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:232:in `loop'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:232:in `block in each_top_level_statement'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:231:in `catch'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:231:in `each_top_level_statement'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:487:in `eval_input'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:428:in `block in run'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:427:in `catch'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:427:in `run'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:383:in `start'
+      /Users/genadi/.rbenv/versions/2.5.0/bin/irb:11:in `&lt;main&gt;'
+      =&gt; nil
+
+section.center
+  p Reflection of the current thread stack frames as readable text.
+
+section.center
+  p Represented as an Array of String objects.
+
+section.center data-background="#000"
+  h2.white Kernel#caller_locations
+
+section.center
+  p The same as Kernel#caller, but returns an Array of Thread::Backtrace::Location objects.
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      &gt;&gt; puts caller_locations
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/workspace.rb:85:in `eval'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/workspace.rb:85:in `evaluate'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/context.rb:380:in `evaluate'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:491:in `block (2 levels) in eval_input'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:621:in `signal_status'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:488:in `block in eval_input'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:246:in `block (2 levels) in each_top_level_statement'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:232:in `loop'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:232:in `block in each_top_level_statement'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:231:in `catch'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:231:in `each_top_level_statement'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:487:in `eval_input'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:428:in `block in run'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:427:in `catch'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:427:in `run'
+      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:383:in `start'
+      /Users/genadi/.rbenv/versions/2.5.0/bin/irb:11:in `&lt;main&gt;'
+      =&gt; nil
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      &gt;&gt; caller_locations.first.path
+      =&gt; &quot;/Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/workspace.rb&quot;
+      &gt;&gt; caller_locations.first.label
+      =&gt; &quot;eval&quot;
+      &gt;&gt; caller_locations.first.lineno
+      =&gt; 85
+
+section.center data-background="#F00"
+  h2.white Bindex
+
+section.center data-background="#000"
+  h2.white Bindex
+
+section.center data-background="#00F"
+  h2.white Bindex
+
+section.center
+  p Cross-platform utilities for building <span class="red">Bindings</span>.
+
+section.center
+  p CRuby
+
+section.center
+  p JRuby
+
+section.center
+  p Rubinius
+
+section.center data-background="#000"
+  h2.white ✌️
+
+section.center data-background="#000"
+  h2.white ☝️
+
+section.center data-background="#000"
+  h2.white Bindex.current_bindings
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      static VALUE
+      current_bindings_callback(const rb_debug_inspector_t *context, void *data)
+      {
+        VALUE locations = rb_debug_inspector_backtrace_locations(context);
+        VALUE binding, bindings = rb_ary_new();
+        long i, length = RARRAY_LEN(locations);
+
+        for (i = 0; i < length; i++) {
+          binding = rb_debug_inspector_frame_binding_get(context, i);
+
+          if (!NIL_P(binding)) {
+            rb_ary_push(bindings, binding);
+          }
+        }
+
+        return bindings;
+      }
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      static VALUE
+      current_bindings(void)
+      {
+        return rb_debug_inspector_open(current_bindings_callback, NULL);
+      }
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      static VALUE
+      bx_current_bindings(VALUE self)
+      {
+        return current_bindings();
+      }
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      void
+      Init_cruby(void)
+      {
+        bx_mBindex = rb_define_module("Bindex");
+
+        rb_define_singleton_method(bx_mBindex, "current_bindings", bx_current_bindings, 0);
+      }
+
+section.center data-background="#000"
+  h2.white Debug Inspector API
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data);
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
+
+section.center
+  p Straight outta ruby/ruby.h 😅
+
+section.center
+  h2.Kernel#console
 
 section.center
   p Consider this a future slide...
