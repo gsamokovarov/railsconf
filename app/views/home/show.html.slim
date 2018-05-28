@@ -125,7 +125,7 @@ section.center data-background="https://upload.wikimedia.org/wikipedia/commons/8
   = copyright "Nintendo Famicom Clone", "https://en.wikipedia.org/wiki/Ending-Man_Terminator"
 
 section.center data-background="https://vignette.wikia.nocookie.net/contra/images/4/44/Kimkoh_-_02.png"
-  h2 💡
+  h2.fragment 💡
   = copyright "Kimkoh", "http://contra.wikia.com/wiki/Kimkoh"
 
 section.center data-background="#000"
@@ -142,9 +142,10 @@ section.center data-background="#F0F"
 
 section.center
   p 素晴らしいです 🤗
+  p <em>(Subarashīdesu)</em>
 
 section.center data-background="#000"
-  h2.white How does console <span class="red">?</span>
+  h2.white How does Web Console work<span class="red">?</span>
 
 section.center data-background="#F00"
   h2.white Rack<span class="black">!</span>
@@ -181,20 +182,157 @@ section.center
       end
 
 section.center
-  img.inline src=image_path("browser_to_rails_with_web_console.svg")
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip? 👈
+
+          if id = id_for_repl_session_update(request)
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request)
+          end
+
+          status, headers, body = @app.call(env)
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
+        end
+      end
 
 section.center
   pre(contenteditable=true): code.ruby
     '
-      module Kernel
-        module_function
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip?
 
-        def console(binding = Bindex.current_bindings.second)
-          Thread.current[:__web_console_binding] = binding
+          if id = id_for_repl_session_update(request) 👈
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request)
+          end
 
-          nil
+          status, headers, body = @app.call(env)
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
         end
       end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip?
+
+          if id = id_for_repl_session_update(request)
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request) 👈
+          end
+
+          status, headers, body = @app.call(env)
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip?
+
+          if id = id_for_repl_session_update(request)
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request)
+          end
+
+          status, headers, body = @app.call(env) 👈
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip?
+
+          if id = id_for_repl_session_update(request)
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request)
+          end
+
+          status, headers, body = @app.call(env)
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers) 👈
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip?
+
+          if id = id_for_repl_session_update(request)
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request)
+          end
+
+          status, headers, body = @app.call(env)
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ] 👈
+        end
+      end
+
+section.center
+  img.inline src=image_path("browser_to_rails_with_web_console.svg")
 
 section.center
   pre(contenteditable=true): code.ruby
@@ -219,6 +357,364 @@ section.center
             @headers
           ]
         end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      module Kernel
+        module_function
+
+        def console(binding = Bindex.current_bindings.second)
+          Thread.current[:__web_console_binding] = binding
+
+          nil
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      # A session lets you persist an +Evaluator+ instance in memory associated
+      # with multiple bindings.
+      #
+      # Each newly created session is persisted into memory and you can find it
+      # later by its +id+.
+      #
+      # A session may be associated with multiple bindings. This is used by the
+      # error pages only, as currently, this is the only client that needs to do
+      # that.
+      class WebConsole::Session
+        cattr_reader :inmemory_storage, default: {}
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # Finds a persisted session in memory by its id.
+        #
+        # Returns a persisted session if found in memory.
+        # Raises NotFound error unless found in memory.
+        def self.find(id)
+          inmemory_storage[id]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # Create a Session from an binding or exception in a storage.
+        #
+        # The storage is expected to respond to #[]. The binding is expected in
+        # :__web_console_binding and the exception in :__web_console_exception.
+        #
+        # Can return nil, if no binding or exception have been preserved in the
+        # storage.
+        def self.from(storage)
+          if exc = storage[:__web_console_exception]
+            new(ExceptionMapper.new(exc))
+          elsif binding = storage[:__web_console_binding]
+            new([binding])
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # Create a Session from an binding or exception in a storage.
+        #
+        # The storage is expected to respond to #[]. The binding is expected in
+        # :__web_console_binding and the exception in :__web_console_exception.
+        #
+        # Can return nil, if no binding or exception have been preserved in the
+        # storage.
+        def self.from(storage) 👈
+          if exc = storage[:__web_console_exception]
+            new(ExceptionMapper.new(exc))
+          elsif binding = storage[:__web_console_binding]
+            new([binding])
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # Create a Session from an binding or exception in a storage.
+        #
+        # The storage is expected to respond to #[]. The binding is expected in
+        # :__web_console_binding and the exception in :__web_console_exception.
+        #
+        # Can return nil, if no binding or exception have been preserved in the
+        # storage.
+        def self.from(storage)
+          if exc = storage[:__web_console_exception] 👈
+            new(ExceptionMapper.new(exc))
+          elsif binding = storage[:__web_console_binding]
+            new([binding])
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # Create a Session from an binding or exception in a storage.
+        #
+        # The storage is expected to respond to #[]. The binding is expected in
+        # :__web_console_binding and the exception in :__web_console_exception.
+        #
+        # Can return nil, if no binding or exception have been preserved in the
+        # storage.
+        def self.from(storage)
+          if exc = storage[:__web_console_exception]
+            new(ExceptionMapper.new(exc))
+          elsif binding = storage[:__web_console_binding] 👈
+            new([binding])
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      WebConsole::Session.from(Thread.current)
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # An unique identifier for every REPL.
+        attr_reader :id
+
+        def initialize(bindings)
+          @id = SecureRandom.hex(16)
+          @bindings = bindings
+          @evaluator = Evaluator.new(@current_binding = bindings.first)
+
+          store_into_memory
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # An unique identifier for every REPL.
+        attr_reader :id
+
+        def initialize(bindings)
+          @id = SecureRandom.hex(16)
+          @bindings = bindings
+          @evaluator = Evaluator.new(@current_binding = bindings.first) 😅
+
+          store_into_memory
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # An unique identifier for every REPL.
+        attr_reader :id
+
+        def initialize(bindings)
+          @id = SecureRandom.hex(16)
+          @bindings = bindings
+          @evaluator = Evaluator.new(@current_binding = bindings.first)
+
+          store_into_memory 👈
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # Evaluate +input+ on the current Evaluator associated binding.
+        #
+        # Returns a string of the Evaluator output.
+        def eval(input)
+          @evaluator.eval(input)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # Switches the current binding to the one at specified +index+.
+        #
+        # Returns nothing.
+        def switch_binding_to(index)
+          @evaluator = Evaluator.new(@current_binding = @bindings[index.to_i])
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        # Returns context of the current binding, used by the autocompletion feature.
+        def context(objpath)
+          Context.new(@current_binding).extract(objpath)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Evaluator
+        def initialize(binding = TOPLEVEL_BINDING)
+          @binding = binding
+        end
+
+        def eval(input)
+          &quot;=&gt; \#{@binding.eval(input).inspect}\n&quot;
+        rescue Exception => exc
+          format_exception(exc)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Evaluator
+        def initialize(binding = TOPLEVEL_BINDING)
+          @binding = binding
+        end
+
+        def eval(input)
+          &quot;=&gt; \#{@binding.eval(input).inspect}\n&quot; 👈
+        rescue Exception => exc
+          format_exception(exc)
+        end
+      end
+
+section.center data-background="#000"
+  p.white You've seen a lot of Binding calls. 🤔
+
+section.center data-background="#000"
+  p.white They are really important for <span class="red">Web Console</span>...
+
+section.center data-background="#000"
+  p.white Now, back to the code slides 😅
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Evaluator
+        def initialize(binding = TOPLEVEL_BINDING)
+          @binding = binding
+        end
+
+        def eval(input)
+          &quot;=&gt; \#{@binding.eval(input).inspect}\n&quot;
+        rescue Exception => exc 👈
+          format_exception(exc)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Evaluator
+        # Cleanses exceptions raised inside #eval.
+        cattr_reader :cleaner
+        @@cleaner = ActiveSupport::BacktraceCleaner.new
+        @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
+
+        private
+
+          def format_exception(exc)
+            backtrace = cleaner.clean(Array(exc.backtrace) - caller)
+
+            format = "\#{exc.class.name}: \#{exc}\n".dup
+            format &lt;&lt; backtrace.map { |trace| &quot;\tfrom \#{trace}\n&quot; }.join
+            format
+          end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Evaluator
+        # Cleanses exceptions raised inside #eval.
+        cattr_reader :cleaner
+        @@cleaner = ActiveSupport::BacktraceCleaner.new
+        @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
+
+        private
+
+          def format_exception(exc)
+            backtrace = cleaner.clean(Array(exc.backtrace) - caller) 👈
+
+            format = "\#{exc.class.name}: \#{exc}\n".dup
+            format &lt;&lt; backtrace.map { |trace| &quot;\tfrom \#{trace}\n&quot; }.join
+            format
+          end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def initialize(exception)
+          @backtrace = exception.backtrace
+          @bindings = exception.bindings
+        end
+
+        def first
+          guess_the_first_application_binding || @bindings.first
+        end
+
+        def [](index)
+          guess_binding_for_index(index) || @bindings[index]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def first
+          guess_the_first_application_binding || @bindings.first
+        end
+
+        private
+
+          def guess_the_first_application_binding
+            @bindings.find do |binding|
+              binding.eval("__FILE__").to_s.start_with?(Rails.root.to_s)
+            end
+          end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def [](index)
+          guess_binding_for_index(index) || @bindings[index]
+        end
+
+        private
+
+          def guess_binding_for_index(index)
+            file, line = @backtrace[index].to_s.split(":")
+            line = line.to_i
+
+            @bindings.find do |binding|
+              binding.eval("__FILE__") == file && binding.eval("__LINE__") == line
+            end
+          end
       end
 
 section.center data-background="#000"
