@@ -4,4 +4,8 @@ module ApplicationHelper
       tag.a name, href: link
     end
   end
+
+  def next
+    tag.a '>', href: "#", class: "navigate-next"
+  end
 end

@@ -240,6 +240,32 @@ section.center
         end
       end
 
+section.center data-background-iframe="/console"
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip?
+
+          if id = id_for_repl_session_update(request) 👈
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request)
+          end
+
+          status, headers, body = @app.call(env)
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
+        end
+      end
+  a(href="#" class="navigate-next") &gt;
+
 section.center
   pre(contenteditable=true): code.ruby
     '
@@ -265,6 +291,32 @@ section.center
         end
       end
 
+section.center data-background-iframe="/console"
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip?
+
+          if id = id_for_repl_session_update(request)
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request) 👈
+          end
+
+          status, headers, body = @app.call(env)
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
+        end
+      end
+  a(href="#" class="navigate-next") &gt;
+
 section.center
   pre(contenteditable=true): code.ruby
     '
@@ -280,6 +332,34 @@ section.center
           end
 
           status, headers, body = @app.call(env) 👈
+
+          if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
+        end
+      end
+
+section.center
+  img.inline src=image_path("browser_to_rails_with_web_console.svg")
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.from_whitelisted_ip?
+
+          if id = id_for_repl_session_update(request)
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request)
+          end
+
+          status, headers, body = @app.call(env)
 
           if (session = Session.from(Thread.current)) && acceptable_content_type?(headers)
             template = Template.new(env, session)
@@ -339,9 +419,6 @@ section.center
           [ status, headers, body ] 👈
         end
       end
-
-section.center
-  img.inline src=image_path("browser_to_rails_with_web_console.svg")
 
 section.center
   pre.fragment(contenteditable=true): code.ruby
