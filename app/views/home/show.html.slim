@@ -7,12 +7,13 @@ section.center
 
 section.center
   img.inline src=image_path("me")
-
-section.center
-  h2 Genadi Samokovarov
+  h2.fragment Genadi Samokovarov
 
 section.center
   h2 ゲナディ・サモコヴァロフ
+
+section.center data-background="#000"
+  h2.white ゲナディ・サモコヴァロフ
 
 section.center data-background="#000"
   h2.white ゲナディ
@@ -140,12 +141,20 @@ section.center data-background="#F0F"
 section.center data-background="#F0F"
   = copyright "Demo", "http://localhost:3000"
 
+section.center data-background="http://i.imgur.com/FoSU23L.gif"
+  = copyright "Demo", "http://localhost:3000"
+
 section.center
-  p 素晴らしいです 🤗
-  p <em>(Subarashīdesu)</em>
+  .fragment
+    p 素晴らしいです 🤗
+    p <em>(Subarashīdesu)</em>
 
 section.center data-background="#000"
   h2.white How does Web Console work<span class="red">?</span>
+  = copyright "rails/web-console", "https://github.com/rails/web-console"
+
+section.center
+  a(href="https://github.com/rails/web-console") rails/web-console
 
 section.center data-background="#F00"
   h2.white Rack<span class="black">!</span>
@@ -335,32 +344,7 @@ section.center
   img.inline src=image_path("browser_to_rails_with_web_console.svg")
 
 section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Injector
-        def initialize(body, headers)
-          @body = "".dup
-          body.each { |part| @body << part }
-          body.close if body.respond_to?(:close)
-          @headers = headers
-        end
-
-        def inject(content)
-          @headers.delete("Content-Length")
-
-          [
-            if position = @body.rindex("</body>")
-              [ @body.insert(position, content) ]
-            else
-              [ @body << content ]
-            end,
-            @headers
-          ]
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
+  pre.fragment(contenteditable=true): code.ruby
     '
       module Kernel
         module_function
@@ -375,15 +359,132 @@ section.center
 section.center
   pre(contenteditable=true): code.ruby
     '
-      # A session lets you persist an +Evaluator+ instance in memory associated
-      # with multiple bindings.
-      #
-      # Each newly created session is persisted into memory and you can find it
-      # later by its +id+.
-      #
-      # A session may be associated with multiple bindings. This is used by the
-      # error pages only, as currently, this is the only client that needs to do
-      # that.
+      module Kernel
+        module_function 👈
+
+        def console(binding = Bindex.current_bindings.second)
+          Thread.current[:__web_console_binding] = binding
+
+          nil
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      module Kernel
+        module_function
+
+        def console(binding = Bindex.current_bindings.second)
+          Thread.current[:__web_console_binding] = binding
+
+          nil 👈
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Injector
+        def initialize(body, headers)
+          @body = "".dup
+          body.each { |part| @body << part }
+          body.close if body.respond_to?(:close)
+          @headers = headers
+        end
+
+        def inject(content)
+          @headers.delete("Content-Length")
+
+          [
+            if position = @body.rindex(&quot;&lt;/body&gt;&quot;)
+              [ @body.insert(position, content) ]
+            else
+              [ @body << content ]
+            end,
+            @headers
+          ]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Injector
+        def initialize(body, headers)
+          @body = "".dup 👈
+          body.each { |part| @body << part }
+          body.close if body.respond_to?(:close)
+          @headers = headers
+        end
+
+        def inject(content)
+          @headers.delete("Content-Length")
+
+          [
+            if position = @body.rindex(&quot;&lt;/body&gt;&quot;)
+              [ @body.insert(position, content) ]
+            else
+              [ @body << content ]
+            end,
+            @headers
+          ]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Injector
+        def initialize(body, headers)
+          @body = "".dup
+          body.each { |part| @body << part }
+          body.close if body.respond_to?(:close)
+          @headers = headers
+        end
+
+        def inject(content)
+          @headers.delete("Content-Length") 👈
+
+          [
+            if position = @body.rindex(&quot;&lt;/body&gt;&quot;)
+              [ @body.insert(position, content) ]
+            else
+              [ @body << content ]
+            end,
+            @headers
+          ]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Injector
+        def initialize(body, headers)
+          @body = "".dup
+          body.each { |part| @body << part }
+          body.close if body.respond_to?(:close)
+          @headers = headers
+        end
+
+        def inject(content)
+          @headers.delete("Content-Length")
+
+          [
+            if position = @body.rindex(&quot;&lt;/body&gt;&quot;) 👈
+              [ @body.insert(position, content) ]
+            else
+              [ @body << content ]
+            end,
+            @headers
+          ]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
       class WebConsole::Session
         cattr_reader :inmemory_storage, default: {}
       end
@@ -392,10 +493,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # Finds a persisted session in memory by its id.
-        #
-        # Returns a persisted session if found in memory.
-        # Raises NotFound error unless found in memory.
         def self.find(id)
           inmemory_storage[id]
         end
@@ -405,13 +502,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # Create a Session from an binding or exception in a storage.
-        #
-        # The storage is expected to respond to #[]. The binding is expected in
-        # :__web_console_binding and the exception in :__web_console_exception.
-        #
-        # Can return nil, if no binding or exception have been preserved in the
-        # storage.
         def self.from(storage)
           if exc = storage[:__web_console_exception]
             new(ExceptionMapper.new(exc))
@@ -425,13 +515,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # Create a Session from an binding or exception in a storage.
-        #
-        # The storage is expected to respond to #[]. The binding is expected in
-        # :__web_console_binding and the exception in :__web_console_exception.
-        #
-        # Can return nil, if no binding or exception have been preserved in the
-        # storage.
         def self.from(storage) 👈
           if exc = storage[:__web_console_exception]
             new(ExceptionMapper.new(exc))
@@ -445,13 +528,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # Create a Session from an binding or exception in a storage.
-        #
-        # The storage is expected to respond to #[]. The binding is expected in
-        # :__web_console_binding and the exception in :__web_console_exception.
-        #
-        # Can return nil, if no binding or exception have been preserved in the
-        # storage.
         def self.from(storage)
           if exc = storage[:__web_console_exception] 👈
             new(ExceptionMapper.new(exc))
@@ -465,13 +541,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # Create a Session from an binding or exception in a storage.
-        #
-        # The storage is expected to respond to #[]. The binding is expected in
-        # :__web_console_binding and the exception in :__web_console_exception.
-        #
-        # Can return nil, if no binding or exception have been preserved in the
-        # storage.
         def self.from(storage)
           if exc = storage[:__web_console_exception]
             new(ExceptionMapper.new(exc))
@@ -490,7 +559,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # An unique identifier for every REPL.
         attr_reader :id
 
         def initialize(bindings)
@@ -506,7 +574,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # An unique identifier for every REPL.
         attr_reader :id
 
         def initialize(bindings)
@@ -522,7 +589,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # An unique identifier for every REPL.
         attr_reader :id
 
         def initialize(bindings)
@@ -538,9 +604,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # Evaluate +input+ on the current Evaluator associated binding.
-        #
-        # Returns a string of the Evaluator output.
         def eval(input)
           @evaluator.eval(input)
         end
@@ -550,9 +613,6 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # Switches the current binding to the one at specified +index+.
-        #
-        # Returns nothing.
         def switch_binding_to(index)
           @evaluator = Evaluator.new(@current_binding = @bindings[index.to_i])
         end
@@ -562,11 +622,31 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
-        # Returns context of the current binding, used by the autocompletion feature.
         def context(objpath)
           Context.new(@current_binding).extract(objpath)
         end
       end
+
+section.center data-background="#F0F"
+  h2.white Limitations<span class="black">!</span>
+
+section.center
+  p Sessions can be stored <span class="shadow">only</span> in memory<span class="red">!</span>
+
+section.center
+  p A problem for <span class="red">multi-process</span> servers in development.
+
+section.center
+  p The sessions are <span class="shadow">never</span> cleaned up!
+
+section.center
+  h3 🗑
+
+section.center
+  p Remote Code Execution (<span class="red">RCE</span>)
+
+section.center data-background="#000"
+  h2.white 😅
 
 section.center
   pre(contenteditable=true): code.ruby
@@ -599,13 +679,28 @@ section.center
       end
 
 section.center data-background="#000"
-  p.white You've seen a lot of Binding calls. 🤔
+  p.white You've seen a lot of <span class="red">Binding</span> calls. 🤔
 
 section.center data-background="#000"
-  p.white They are really important for <span class="red">Web Console</span>...
+  p.white Those are really important for <span class="red">Web Console</span>...
 
 section.center data-background="#000"
   p.white Now, back to the code slides 😅
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Evaluator
+        def initialize(binding = TOPLEVEL_BINDING)
+          @binding = binding
+        end
+
+        def eval(input)
+          &quot;=&gt; \#{@binding.eval(input).inspect}\n&quot;
+        rescue Exception => exc
+          format_exception(exc)
+        end
+      end
 
 section.center
   pre(contenteditable=true): code.ruby
@@ -626,191 +721,132 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Evaluator
-        # Cleanses exceptions raised inside #eval.
-        cattr_reader :cleaner
-        @@cleaner = ActiveSupport::BacktraceCleaner.new
-        @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
+        def initialize(binding = TOPLEVEL_BINDING)
+          @binding = binding
+        end
 
-        private
-
-          def format_exception(exc)
-            backtrace = cleaner.clean(Array(exc.backtrace) - caller)
-
-            format = "\#{exc.class.name}: \#{exc}\n".dup
-            format &lt;&lt; backtrace.map { |trace| &quot;\tfrom \#{trace}\n&quot; }.join
-            format
-          end
+        def eval(input)
+          &quot;=&gt; \#{@binding.eval(input).inspect}\n&quot;
+        rescue => exc 👈
+          format_exception(exc)
+        end
       end
 
 section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Evaluator
-        # Cleanses exceptions raised inside #eval.
-        cattr_reader :cleaner
-        @@cleaner = ActiveSupport::BacktraceCleaner.new
-        @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
+        def initialize(binding = TOPLEVEL_BINDING)
+          @binding = binding
+        end
 
-        private
-
-          def format_exception(exc)
-            backtrace = cleaner.clean(Array(exc.backtrace) - caller) 👈
-
-            format = "\#{exc.class.name}: \#{exc}\n".dup
-            format &lt;&lt; backtrace.map { |trace| &quot;\tfrom \#{trace}\n&quot; }.join
-            format
-          end
+        def eval(input)
+          &quot;=&gt; \#{@binding.eval(input).inspect}\n&quot;
+        rescue StandardError => exc 👈
+          format_exception(exc)
+        end
       end
+
+section.center data-background="#000"
+  h2.white Exceptions
+
+section.center
+  p Errors in Ruby are represented by exceptions.
+
+section.center
+  p Is an object of a type Exception.
+
+section.center
+  p They stop the current execution flow, unless they are handled.
+
+section.center data-background="#000"
+  h2.white begin
+
+section.center
+  p We handle exceptions in begin/rescue/else/ensure blocks.
 
 section.center
   pre(contenteditable=true): code.ruby
     '
-      class WebConsole::ExceptionMapper
-        def initialize(exception)
-          @backtrace = exception.backtrace
-          @bindings = exception.bindings
-        end
-
-        def first
-          guess_the_first_application_binding || @bindings.first
-        end
-
-        def [](index)
-          guess_binding_for_index(index) || @bindings[index]
-        end
+      f = File.open("testfile")
+      begin
+        # .. process
+      rescue
+        # .. handle error
+      else
+        puts "Congratulations-- no errors!"
+      ensure
+        f.close unless f.nil?
       end
+  = copyright "Pickaxe", "http://ruby-doc.com/docs/ProgrammingRuby/html/tut_exceptions.html"
+
+section.center data-background="#000"
+  pre.white
+    '
+      Exception
+        NoMemoryError
+        ScriptError
+          LoadError
+          NotImplementedError
+          SyntaxError
+        SecurityError
+        SignalException
+          Interrupt
+        StandardError -- default for rescue
+        SystemExit
+        SystemStackError
+        fatal –- impossible to rescue
+
+section.center data-background="#000"
+  pre.white
+    '
+      StandardError -- default for rescue
+        ArgumentError
+        EncodingError
+        FiberError
+        IOError
+          EOFError
+        IndexError
+          KeyError
+          StopIteration
+        LocalJumpError
+        NameError
+          NoMethodError
+        RangeError
+          FloatDomainError
+        RegexpError
+        RuntimeError -- default for raise
+        SystemCallError
+          Errno::*
+        ThreadError
+        TypeError
+        ZeroDivisionError
+
+section.center data-background="#000"
+  h2.white Kernel#raise
 
 section.center
   pre(contenteditable=true): code.ruby
     '
-      class WebConsole::ExceptionMapper
-        def first
-          guess_the_first_application_binding || @bindings.first
-        end
+      raise
+      raise "bad mp3 encoding"
+      raise InterfaceException, "Keyboard failure", caller
 
-        private
-
-          def guess_the_first_application_binding
-            @bindings.find do |binding|
-              binding.eval("__FILE__").to_s.start_with?(Rails.root.to_s)
-            end
-          end
-      end
+section.center
+  p The stack trace is normally produced using the <span class="red">Kernel#caller</span> method
 
 section.center
   pre(contenteditable=true): code.ruby
     '
-      class WebConsole::ExceptionMapper
-        def [](index)
-          guess_binding_for_index(index) || @bindings[index]
-        end
+      raise
 
-        private
+      raise "Missing name" if name.nil?
 
-          def guess_binding_for_index(index)
-            file, line = @backtrace[index].to_s.split(":")
-            line = line.to_i
-
-            @bindings.find do |binding|
-              binding.eval("__FILE__") == file && binding.eval("__LINE__") == line
-            end
-          end
+      if i >= myNames.size
+        raise IndexError, "\#{i} >= size (\#{myNames.size})"
       end
 
-section.center data-background="#000"
-  h2.white Binding
-
-section.center data-background=image_path("aaron_binding.png")
-  .fragment
-    blockquote"Basically, an implementor's nightmare!"
-    p Aaron Patterson
-
-section.center data-background="#000"
-  p.white Encapsulate the execution context at some particular place in the code.
-
-section.center data-background="#000"
-  p.white Retain this context for future use.
-
-section.center
-  p Local variables
-
-section.center
-  p Instance variables
-
-section.center
-  p Methods
-
-section.center
-  p self
-
-section.center
-  p The current class
-
-section.center
-  p __FILE__
-
-section.center
-  p __LINE__
-
-section.center data-background="#000"
-  p.white Binding#<span class="red">eval</span> <span class="fragment">👈</span>
-
-section.center data-background="#000"
-  p.white Usually created using Kernel#binding.
-
-section.center data-background="#000"
-  p.white Created <strong>only</strong> for the current thread stack frame!
-
-section.center data-background="#000"
-  p.white Keeps a reference to <span class="red">everything</span> the current context can touch.
-
-section.center
-  h2 🤔
-
-section.center
-  h2 Binding#pry
-  p binding.pry
-
-section.center
-  h2 Binding#irb
-  p binding.irb
-
-section.center data-background="#000"
-  h2.white Binding#console
-  p.white binding.console
-
-section.center data-background="#000"
-  h2 😅
-
-section.center
-  h2 Kernel#console
-  p console
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      module Kernel
-        module_function
-
-        def console(binding = Bindex.current_bindings.second)
-          Thread.current[:__web_console_binding] = binding
-
-          nil
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      module Kernel
-        module_function
-
-        def console(binding = Bindex.current_bindings.second) 👈
-          Thread.current[:__web_console_binding] = binding
-
-          nil
-        end
-      end
+      raise ArgumentError, "Name too big", caller
 
 section.center data-background="#000"
   h2.white Kernel#caller
@@ -883,6 +919,139 @@ section.center
       &gt;&gt; caller_locations.first.lineno
       =&gt; 85
 
+section.center
+  pre.fragment(contenteditable=true): code.ruby
+    '
+      class WebConsole::Evaluator
+        cattr_reader :cleaner
+        @@cleaner = ActiveSupport::BacktraceCleaner.new
+        @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
+
+        private
+
+          def format_exception(exc)
+            backtrace = cleaner.clean(Array(exc.backtrace) - caller)
+
+            format = "\#{exc.class.name}: \#{exc}\n".dup
+            format &lt;&lt; backtrace.map { |trace| &quot;\tfrom \#{trace}\n&quot; }.join
+            format
+          end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Evaluator
+        cattr_reader :cleaner
+        @@cleaner = ActiveSupport::BacktraceCleaner.new
+        @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
+
+        private
+
+          def format_exception(exc)
+            backtrace = cleaner.clean(Array(exc.backtrace) - caller) 👈
+
+            format = "\#{exc.class.name}: \#{exc}\n".dup
+            format &lt;&lt; backtrace.map { |trace| &quot;\tfrom \#{trace}\n&quot; }.join
+            format
+          end
+      end
+
+section.center data-background="#000"
+  h2.white Binding
+
+section.center data-background=image_path("aaron_binding.png")
+  .fragment
+    blockquote"Basically, an implementor's nightmare!"
+    p Aaron Patterson
+
+section.center data-background="#000"
+  p.white Encapsulate the execution context at some particular place in the code.
+
+section.center data-background="#000"
+  p.white Retain this context for future use.
+
+section.center
+  p Local variables
+
+section.center
+  p Instance variables
+
+section.center
+  p Methods
+
+section.center
+  p self
+
+section.center
+  p The current class
+
+section.center
+  p __FILE__
+
+section.center
+  p __LINE__
+
+section.center data-background="#000"
+  p.white Binding#<span class="red">eval</span> <span class="fragment">👈</span>
+
+section.center data-background="#000"
+  p.white Usually created by <span class="red">Kernel#binding</span>.
+
+section.center data-background="#000"
+  p.white Created <strong>only</strong> for the current thread stack frame!
+
+section.center data-background="#000"
+  p.white Keeps a reference to <span class="red">everything</span> the current context can touch.
+
+section.center
+  h2 🤔
+
+section.center
+  h2 Binding#pry
+  p binding.pry
+
+section.center
+  h2 Binding#irb
+  p binding.irb
+
+section.center
+  h2 Kernel#console
+  p console
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      module Kernel
+        module_function
+
+        def console(binding = Bindex.current_bindings.second)
+          Thread.current[:__web_console_binding] = binding
+
+          nil
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      module Kernel
+        module_function
+
+        def console(binding = Bindex.current_bindings.second) 👈
+          Thread.current[:__web_console_binding] = binding
+
+          nil
+        end
+      end
+
+section.center data-background="#F00"
+  h2.white Binding#console
+  p.white binding.console
+
+section.center data-background="#F00"
+  h2 😅
+
 section.center data-background="#F00"
   h2.white Bindex
 
@@ -893,7 +1062,7 @@ section.center data-background="#00F"
   h2.white Bindex
 
 section.center
-  p Cross-platform utilities for building <span class="red">Bindings</span>.
+  p Cross-platform utilities for building <span class="red">Binding</span> objects.
 
 section.center
   p CRuby
@@ -907,10 +1076,10 @@ section.center
 section.center data-background="#000"
   h2.white ✌️
 
-section.center data-background="#000"
+section.center data-background="#F00"
   h2.white ☝️
 
-section.center data-background="#000"
+section.center data-background="#F00"
   h2.white Bindex.current_bindings
 
 section.center
@@ -964,7 +1133,7 @@ section.center
       }
 
 section.center data-background="#000"
-  h2.white Debug Inspector API
+  h2.white Debug Inspector API <span class="red fragment">(CRuby)</span>
 
 section.center
   pre(contenteditable=true): code.c
@@ -984,22 +1153,269 @@ section.center
   p Straight outta ruby/ruby.h 😅
 
 section.center
-  h2.Kernel#console
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data);
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
 
 section.center
-  p Consider this a future slide...
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data); 👈
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *); 👈
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data);
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data);
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc); 👈
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data); 👈
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data);
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index); 👈
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data);
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index); 👈
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data);
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index); 👈
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      /* debug inspector APIs */
+      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
+      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
+
+      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data);
+      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
+      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index); 👈
+      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
+
+section.center data-background="#00F"
+  h2.white ✌️
+
+section.center data-background="#00F"
+  h2.white Exception#bindings
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      static void
+      set_exception_bindings_on_raise(void)
+      {
+        VALUE tpval = rb_tracepoint_new(0, RUBY_EVENT_RAISE, set_exception_bindings_callback, 0);
+        rb_tracepoint_enable(tpval);
+      }
+
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      static void
+      set_exception_bindings_callback(VALUE tpval, void *data)
+      {
+        rb_trace_arg_t *trace_arg = rb_tracearg_from_tracepoint(tpval);
+        VALUE exception = rb_tracearg_raised_exception(trace_arg);
+        VALUE bindings = rb_attr_get(exception, id_bindings);
+
+        /* Set the bindings, only if they haven't been set already. This may reset
+         * the binding during reraise. */
+        if (NIL_P(bindings)) {
+          rb_ivar_set(exception, id_bindings, current_bindings());
+        }
+      }
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      static VALUE
+      bx_exc_bindings(VALUE self)
+      {
+        VALUE bindings = rb_attr_get(self, id_bindings);
+
+        if (NIL_P(bindings)) {
+          bindings = rb_ary_new();
+        }
+
+        return bindings;
+      }
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      void
+      Init_cruby(void)
+      {
+        bx_mBindex = rb_define_module("Bindex");
+        id_bindings = rb_intern("bindings");
+
+        rb_define_method(rb_eException, "bindings", bx_exc_bindings, 0);
+
+        set_exception_bindings_on_raise();
+      }
 
 section.center data-background="#000"
-  h2.white How does the error page works <span class="red">?</span>
-
-section.center data-background="#222"
-  p.white To learn about how error handling works in Rails...
-
-section.center data-background="#444"
-  p.white We need to learn how error handling works in <span class="red">Ruby</span>...
+  h2.white TracePoint <span class="red fragment">(CRuby)</span>
 
 section.center
-  p WIP
+  p Provides Object-Oriented API for the functionality of <span class="red">Kernel#set_trace_func</span>.
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      trace = TracePoint.new(:raise) do |tp|
+        p [tp.lineno, tp.event, tp.raised_exception]
+      end
+      #=&gt; #&lt;TracePoint:disabled&gt;
+
+      trace.enable
+      #=&gt; false
+
+      0 / 0
+      #=&gt; [5, :raise, #&lt;ZeroDivisionError: divided by 0&gt;]
+
+section.center
+  h3 line
+  p execute code on a new line
+
+section.center
+  h3 class
+  p start a class or module definition
+
+section.center
+  h3 end
+  p finish a class or module definition
+
+section.center
+  h3 call
+  p call a Ruby method
+
+section.center
+  h3 return
+  p return from a Ruby method
+
+section.center
+  h3 c_call
+  p call a C-language routine
+
+section.center
+  h3 c_return
+  p return from a C-language routine
+
+section.center
+  h3 raise
+  p raise an exception
+
+section.center data-background="#000"
+  h3.white raise
+  p.white raise an exception
+
+section.center
+  h3 b_call
+  p event hook at block entry
+
+section.center
+  h3 b_return
+  p event hook at block ending
+
+section.center
+  h3 thread_begin
+  p event hook at thread beginning
+
+section.center
+  h3 thread_end
+  p event hook at thread ending
+
+section.center
+  h3 fiber_switch
+  p event hook at fiber switch
 
 section.center data-background="#000"
   h2.white Error Handling in <span class="red">Rails</span>
@@ -1253,6 +1669,61 @@ section.center
       end
 
 section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions
+      # ...
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware 👈
+      use ActionDispatch::DebugExceptions
+      # ...
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware 👈 ⁉️
+      use ActionDispatch::DebugExceptions
+      # ...
+
+section.center
+  pre.fragment(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def render_exception_with_web_console(request, exception)
+          render_exception_without_web_console(request, exception).tap do
+            backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
+            error = ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception).exception
+
+            # Get the original exception if ExceptionWrapper decides to follow it.
+            Thread.current[:__web_console_exception] = error
+
+            # ActionView::Template::Error bypass ExceptionWrapper original
+            # exception following. The backtrace in the view is generated from
+            # reaching out to cause in the view.
+            if error.is_a?(ActionView::Template::Error)
+              Thread.current[:__web_console_exception] = error.cause
+            end
+          end
+        end
+
+        alias_method :render_exception_without_web_console, :render_exception
+        alias_method :render_exception, :render_exception_with_web_console
+      end
+
+section.center
   pre(contenteditable=true): code.ruby
     '
       class ActionDispatch::DebugExceptions
@@ -1268,6 +1739,82 @@ section.center
             # exception following. The backtrace in the view is generated from
             # reaching out to cause in the view.
             if error.is_a?(ActionView::Template::Error)
+              Thread.current[:__web_console_exception] = error.cause
+            end
+          end
+        end
+
+        alias_method :render_exception_without_web_console, :render_exception 👈
+        alias_method :render_exception, :render_exception_with_web_console
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def render_exception_with_web_console(request, exception)
+          render_exception_without_web_console(request, exception).tap do
+            backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
+            error = ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception).exception 👈
+
+            # Get the original exception if ExceptionWrapper decides to follow it.
+            Thread.current[:__web_console_exception] = error
+
+            # ActionView::Template::Error bypass ExceptionWrapper original
+            # exception following. The backtrace in the view is generated from
+            # reaching out to cause in the view.
+            if error.is_a?(ActionView::Template::Error)
+              Thread.current[:__web_console_exception] = error.cause
+            end
+          end
+        end
+
+        alias_method :render_exception_without_web_console, :render_exception
+        alias_method :render_exception, :render_exception_with_web_console
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def render_exception_with_web_console(request, exception)
+          render_exception_without_web_console(request, exception).tap do
+            backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
+            error = ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception).exception
+
+            # Get the original exception if ExceptionWrapper decides to follow it.
+            Thread.current[:__web_console_exception] = error 👈
+
+            # ActionView::Template::Error bypass ExceptionWrapper original
+            # exception following. The backtrace in the view is generated from
+            # reaching out to cause in the view.
+            if error.is_a?(ActionView::Template::Error)
+              Thread.current[:__web_console_exception] = error.cause
+            end
+          end
+        end
+
+        alias_method :render_exception_without_web_console, :render_exception
+        alias_method :render_exception, :render_exception_with_web_console
+      end
+
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def render_exception_with_web_console(request, exception)
+          render_exception_without_web_console(request, exception).tap do
+            backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
+            error = ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception).exception
+
+            # Get the original exception if ExceptionWrapper decides to follow it.
+            Thread.current[:__web_console_exception] = error
+
+            # ActionView::Template::Error bypass ExceptionWrapper original
+            # exception following. The backtrace in the view is generated from
+            # reaching out to cause in the view.
+            if error.is_a?(ActionView::Template::Error) 👈
               Thread.current[:__web_console_exception] = error.cause
             end
           end
@@ -1317,16 +1864,190 @@ section.center data-background="#F00"
   p.white The Interceptor API
 
 section.center data-background="#F00"
-  h2.white 🙅‍♀️ 🐒 
-
-section.center data-background="#F0F"
-  h2.white Limitations<span class="black">!</span>
-
-section.center
-  p Multi-process servers.
-
-section.center
-  p Remote Code Execution (<span class="red">RCE</span>)
+  h2.white 🙅‍♀️🐒 
 
 section.center data-background="#000"
-  h2.white 😅
+  h2.white Application vs Framework Bindings
+
+section.center data-background-iframe="/error"
+  a(href="#" class="navigate-next") &gt;
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def initialize(exception)
+          @backtrace = exception.backtrace
+          @bindings = exception.bindings
+        end
+
+        def first
+          guess_the_first_application_binding || @bindings.first
+        end
+
+        def [](index)
+          guess_binding_for_index(index) || @bindings[index]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def initialize(exception)
+          @backtrace = exception.backtrace 👈
+          @bindings = exception.bindings
+        end
+
+        def first
+          guess_the_first_application_binding || @bindings.first
+        end
+
+        def [](index)
+          guess_binding_for_index(index) || @bindings[index]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def initialize(exception)
+          @backtrace = exception.backtrace
+          @bindings = exception.bindings 👈
+        end
+
+        def first
+          guess_the_first_application_binding || @bindings.first
+        end
+
+        def [](index)
+          guess_binding_for_index(index) || @bindings[index]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def first
+          guess_the_first_application_binding || @bindings.first
+        end
+
+        private
+
+          def guess_the_first_application_binding
+            @bindings.find do |binding|
+              binding.eval("__FILE__").to_s.start_with?(Rails.root.to_s)
+            end
+          end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def first
+       👉 guess_the_first_application_binding || @bindings.first
+        end
+
+        private
+
+          def guess_the_first_application_binding
+            @bindings.find do |binding|
+              binding.eval("__FILE__").to_s.start_with?(Rails.root.to_s)
+            end
+          end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def first
+          guess_the_first_application_binding || @bindings.first 👈
+        end
+
+        private
+
+          def guess_the_first_application_binding
+            @bindings.find do |binding|
+              binding.eval("__FILE__").to_s.start_with?(Rails.root.to_s)
+            end
+          end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::ExceptionMapper
+        def [](index)
+          guess_binding_for_index(index) || @bindings[index]
+        end
+
+        private
+
+          def guess_binding_for_index(index)
+            file, line = @backtrace[index].to_s.split(":")
+            line = line.to_i
+
+            @bindings.find do |binding|
+              binding.eval("__FILE__") == file && binding.eval("__LINE__") == line
+            end
+          end
+      end
+
+section.center data-background="#000"
+  = copyright "roh design", "http://rohdesign.com/weblog/2011/5/16/pipeline-railsconf-illustration.html"
+section data-background=image_path("future.png")
+  h2.white.fragment Future
+  = copyright "roh design", "http://rohdesign.com/weblog/2011/5/16/pipeline-railsconf-illustration.html"
+
+section.center
+  h2 Binding#console
+
+section.center
+  h2 Actionable Errors
+
+section.center
+  h2 Nicer UX
+
+section.center
+  h2 Browser Extensions
+
+section.center
+  h2 Always On™️ 
+
+section.center
+  h2 👌
+
+section.center
+  h2 Binding Reaping
+
+section.center
+  h2 Production Mode<span class="red">?</span>
+section.center data-background="#000"
+  h2.white Production Mode<span class="red">?</span>
+section.center data-background="#000"
+  h2.white 😱
+
+section.center
+  h2 Optional Bindex
+
+section.center
+  h2 <strike>Optional Bindex</strike>
+
+section.center
+  h2 Optional Skiptrace <span class="fragment">😅</span>
+
+section.center
+  h2 Rack Application for Authentication
+
+section.center data-background="#000"
+  h2 💥
+
+section.center data-background="#000"
+  h1.white.fragment 🙏
+
+section.center data-background="#000"
+  h1.white.fragment Thanks<span class="red">!</span>
