@@ -1,6 +1,6 @@
 class ConsolesController < ApplicationController
   def show
-    console
+    console if respond_to? :console
 
     head :ok
   end
