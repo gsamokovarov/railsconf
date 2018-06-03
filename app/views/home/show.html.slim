@@ -55,15 +55,15 @@ section.center data-background="https://www.mapsland.com/maps/europe/bulgaria/la
   h2.shadow Bulgaria
   = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Bulgaria"
 
-section.center data-background="https://cdn2.wanderlust.co.uk/media/2637/articles-public-mineral-baths-sofia-bulgaria-dreamstime.jpg"
+section data-background="https://cdn2.wanderlust.co.uk/media/2637/articles-public-mineral-baths-sofia-bulgaria-dreamstime.jpg"
   h2.white.shadow Sofia
   = copyright "Wanderlust", "https://www.wanderlust.co.uk/content/short-break-guide-to-sofia-bulgaria/"
 
-section.center data-background="https://cdn2.wanderlust.co.uk/media/2632/magazine-1335.jpg"
+section data-background="https://cdn2.wanderlust.co.uk/media/2632/magazine-1335.jpg"
   h2.white.shadow Sofia
   = copyright "Wanderlust", "https://www.wanderlust.co.uk/content/short-break-guide-to-sofia-bulgaria/"
 
-section.center data-background="https://cdn2.wanderlust.co.uk/media/2633/magazine-2328.jpg"
+section data-background="https://cdn2.wanderlust.co.uk/media/2633/magazine-2328.jpg"
   h2.white.shadow Sofia
   = copyright "Wanderlust", "https://www.wanderlust.co.uk/content/short-break-guide-to-sofia-bulgaria/"
 
@@ -98,42 +98,41 @@ section.center data-background="#2196F3"
   a href="http://partialconf.com"
     img.inline src=image_path("partial.svg")
 
-section.center data-background="https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg"
-  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Japan"
-
-section.center data-background="https://contra.kontek.net/games/supercnes/superc1.gif" data-background-size="50%" data-background-color="#000"
-  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
-
-section.center data-background="https://contra.kontek.net/games/supercnes/superc2.gif" data-background-size="50%" data-background-color="#000"
-  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
-
-section.center data-background="https://contra.kontek.net/games/supercnes/superc3.gif" data-background-size="50%" data-background-color="#000"
-  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
-
-section.center data-background="https://contra.kontek.net/games/supercnes/superc14.gif" data-background-size="50%" data-background-color="#000"
-  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
-
-section.center data-background="https://contra.kontek.net/games/supercnes/superc15.gif" data-background-size="50%" data-background-color="#000"
-  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
-
-section.center data-background="https://contra.kontek.net/games/supercnes/superc17.gif" data-background-size="50%" data-background-color="#000"
-  = copyright "Super C", "https://en.wikipedia.org/wiki/Super_Contra"
-
 section.center data-background="#000"
-  h2 🌍
-
-section.center data-background="https://upload.wikimedia.org/wikipedia/commons/8/8c/Terminator2game.JPG"
-  = copyright "Nintendo Famicom Clone", "https://en.wikipedia.org/wiki/Ending-Man_Terminator"
-
-section.center data-background="https://vignette.wikia.nocookie.net/contra/images/4/44/Kimkoh_-_02.png"
-  h2.fragment 💡
-  = copyright "Kimkoh", "http://contra.wikia.com/wiki/Kimkoh"
-
-section.center data-background="#000"
-  h2.white What is Web Console<span class="red">?</span>
+  h2.white.fragment What is Web Console<span class="red">?</span>
 
 section.center data-background="#000"
   p.white A debugger that doesn't stop the world 🌍
+
+section.center data-background="#000"
+  p.white Included by default in <span class="red">Rails 4.2</span>.
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      group :development do
+        gem 'listen', '>= 3.0.5', '< 3.2'
+        gem 'web-console'
+        gem 'spring'
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      group :development do
+        gem 'listen', '>= 3.0.5', '< 3.2'
+        gem 'web-console' 👈
+        gem 'spring'
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      group :development do
+        gem 'listen', '>= 3.0.5', '< 3.2'
+        gem 'web-console' 👌
+        gem 'spring'
+      end
 
 section.center data-background="#F0F"
   p.white An interactive puts 😎
@@ -462,180 +461,9 @@ section.center
 section.center
   pre(contenteditable=true): code.ruby
     '
-      class WebConsole::Injector
-        def initialize(body, headers)
-          @body = "".dup
-          body.each { |part| @body << part }
-          body.close if body.respond_to?(:close)
-          @headers = headers
-        end
-
-        def inject(content)
-          @headers.delete("Content-Length")
-
-          [
-            if position = @body.rindex(&quot;&lt;/body&gt;&quot;)
-              [ @body.insert(position, content) ]
-            else
-              [ @body << content ]
-            end,
-            @headers
-          ]
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Injector
-        def initialize(body, headers)
-          @body = "".dup 👈
-          body.each { |part| @body << part }
-          body.close if body.respond_to?(:close)
-          @headers = headers
-        end
-
-        def inject(content)
-          @headers.delete("Content-Length")
-
-          [
-            if position = @body.rindex(&quot;&lt;/body&gt;&quot;)
-              [ @body.insert(position, content) ]
-            else
-              [ @body << content ]
-            end,
-            @headers
-          ]
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Injector
-        def initialize(body, headers)
-          @body = "".dup
-          body.each { |part| @body << part }
-          body.close if body.respond_to?(:close)
-          @headers = headers
-        end
-
-        def inject(content)
-          @headers.delete("Content-Length") 👈
-
-          [
-            if position = @body.rindex(&quot;&lt;/body&gt;&quot;)
-              [ @body.insert(position, content) ]
-            else
-              [ @body << content ]
-            end,
-            @headers
-          ]
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Injector
-        def initialize(body, headers)
-          @body = "".dup
-          body.each { |part| @body << part }
-          body.close if body.respond_to?(:close)
-          @headers = headers
-        end
-
-        def inject(content)
-          @headers.delete("Content-Length")
-
-          [
-            if position = @body.rindex(&quot;&lt;/body&gt;&quot;) 👈
-              [ @body.insert(position, content) ]
-            else
-              [ @body << content ]
-            end,
-            @headers
-          ]
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
       class WebConsole::Session
         cattr_reader :inmemory_storage, default: {}
-      end
 
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Session
-        def self.find(id)
-          inmemory_storage[id]
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Session
-        def self.from(storage)
-          if exc = storage[:__web_console_exception]
-            new(ExceptionMapper.new(exc))
-          elsif binding = storage[:__web_console_binding]
-            new([binding])
-          end
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Session
-        def self.from(storage) 👈
-          if exc = storage[:__web_console_exception]
-            new(ExceptionMapper.new(exc))
-          elsif binding = storage[:__web_console_binding]
-            new([binding])
-          end
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Session
-        def self.from(storage)
-          if exc = storage[:__web_console_exception] 👈
-            new(ExceptionMapper.new(exc))
-          elsif binding = storage[:__web_console_binding]
-            new([binding])
-          end
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Session
-        def self.from(storage)
-          if exc = storage[:__web_console_exception]
-            new(ExceptionMapper.new(exc))
-          elsif binding = storage[:__web_console_binding] 👈
-            new([binding])
-          end
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      WebConsole::Session.from(Thread.current)
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Session
         attr_reader :id
 
         def initialize(bindings)
@@ -651,6 +479,42 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
+        cattr_reader :inmemory_storage, default: {} 👈
+
+        attr_reader :id
+
+        def initialize(bindings)
+          @id = SecureRandom.hex(16)
+          @bindings = bindings
+          @evaluator = Evaluator.new(@current_binding = bindings.first)
+
+          store_into_memory
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        cattr_reader :inmemory_storage, default: {}
+
+        attr_reader :id
+
+        def initialize(bindings)
+          @id = SecureRandom.hex(16) 👈
+          @bindings = bindings
+          @evaluator = Evaluator.new(@current_binding = bindings.first)
+
+          store_into_memory
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Session
+        cattr_reader :inmemory_storage, default: {}
+
         attr_reader :id
 
         def initialize(bindings)
@@ -666,6 +530,8 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       class WebConsole::Session
+        cattr_reader :inmemory_storage, default: {}
+
         attr_reader :id
 
         def initialize(bindings)
@@ -683,24 +549,6 @@ section.center
       class WebConsole::Session
         def eval(input)
           @evaluator.eval(input)
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Session
-        def switch_binding_to(index)
-          @evaluator = Evaluator.new(@current_binding = @bindings[index.to_i])
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Session
-        def context(objpath)
-          Context.new(@current_binding).extract(objpath)
         end
       end
 
@@ -755,30 +603,6 @@ section.center
         end
       end
 
-section.center data-background="#000"
-  p.white You've seen a lot of <span class="red">Binding</span> calls. 🤔
-
-section.center data-background="#000"
-  p.white Those are really important for <span class="red">Web Console</span>...
-
-section.center data-background="#000"
-  p.white Now, back to the code slides 😅
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Evaluator
-        def initialize(binding = TOPLEVEL_BINDING)
-          @binding = binding
-        end
-
-        def eval(input)
-          &quot;=&gt; \#{@binding.eval(input).inspect}\n&quot;
-        rescue Exception => exc
-          format_exception(exc)
-        end
-      end
-
 section.center
   pre(contenteditable=true): code.ruby
     '
@@ -826,36 +650,6 @@ section.center
 
 section.center data-background="#000"
   h2.white Exceptions
-
-section.center
-  p Errors in Ruby are represented by exceptions.
-
-section.center
-  p Object of a type Exception.
-
-section.center
-  p They stop the current execution flow, unless they are handled.
-
-section.center data-background="#000"
-  h2.white begin
-
-section.center
-  p We handle exceptions in begin/rescue/else/ensure blocks.
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      f = File.open("testfile")
-      begin
-        # .. process
-      rescue
-        # .. handle error
-      else
-        puts "Congratulations-- no errors!"
-      ensure
-        f.close unless f.nil?
-      end
-  = copyright "Pickaxe", "http://ruby-doc.com/docs/ProgrammingRuby/html/tut_exceptions.html"
 
 section.center data-background="#000"
   pre.white(contenteditable=true)
@@ -906,24 +700,11 @@ section.center
   pre(contenteditable=true): code.ruby
     '
       raise
-      raise "bad mp3 encoding"
-      raise InterfaceException, "Keyboard failure", caller
+      raise "Too lazy to define own error class..."
+      raise Error, "Oops", caller
 
 section.center
-  p The stack trace is normally produced using the <span class="red">Kernel#caller</span> method
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      raise
-
-      raise "Missing name" if name.nil?
-
-      if i >= myNames.size
-        raise IndexError, "\#{i} >= size (\#{myNames.size})"
-      end
-
-      raise ArgumentError, "Name too big", caller
+  p The backtrace is normally produced using the <span class="red">Kernel#caller</span> method.
 
 section.center data-background="#000"
   h2.white Kernel#caller
@@ -996,54 +777,16 @@ section.center
       &gt;&gt; caller_locations.first.lineno
       =&gt; 85
 
-section.center
-  pre.fragment(contenteditable=true): code.ruby
-    '
-      class WebConsole::Evaluator
-        cattr_reader :cleaner
-        @@cleaner = ActiveSupport::BacktraceCleaner.new
-        @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
-
-        private
-
-          def format_exception(exc)
-            backtrace = cleaner.clean(Array(exc.backtrace) - caller)
-
-            format = "\#{exc.class.name}: \#{exc}\n".dup
-            format &lt;&lt; backtrace.map { |trace| &quot;\tfrom \#{trace}\n&quot; }.join
-            format
-          end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class WebConsole::Evaluator
-        cattr_reader :cleaner
-        @@cleaner = ActiveSupport::BacktraceCleaner.new
-        @@cleaner.add_silencer { |line| line.start_with?(File.expand_path("..", __FILE__)) }
-
-        private
-
-          def format_exception(exc)
-            backtrace = cleaner.clean(Array(exc.backtrace) - caller) 👈
-
-            format = "\#{exc.class.name}: \#{exc}\n".dup
-            format &lt;&lt; backtrace.map { |trace| &quot;\tfrom \#{trace}\n&quot; }.join
-            format
-          end
-      end
-
 section.center data-background="#000"
   h2.white Binding
 
 section.center data-background=image_path("aaron_binding.png")
-  .fragment
-    blockquote"Basically, an implementor's nightmare!"
+  .shadow.fragment
+    blockquote "Basically, an implementor's nightmare!"
     p Aaron Patterson
 
 section.center data-background="#000"
-  p.white Encapsulate the execution context at some particular place in the code.
+  p.white Encapsulate the execution context at a particular place in the code.
 
 section.center data-background="#000"
   p.white Retain this context for future use.
@@ -1163,6 +906,15 @@ section.center
   pre(contenteditable=true): code.c
     '
       static VALUE
+      current_bindings(void)
+      {
+        return rb_debug_inspector_open(current_bindings_callback, NULL);
+      }
+
+section.center
+  pre(contenteditable=true): code.c
+    '
+      static VALUE
       current_bindings_callback(const rb_debug_inspector_t *context, void *data)
       {
         VALUE locations = rb_debug_inspector_backtrace_locations(context);
@@ -1178,15 +930,6 @@ section.center
         }
 
         return bindings;
-      }
-
-section.center
-  pre(contenteditable=true): code.c
-    '
-      static VALUE
-      current_bindings(void)
-      {
-        return rb_debug_inspector_open(current_bindings_callback, NULL);
       }
 
 section.center
@@ -1284,20 +1027,6 @@ section.center
       VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
       VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
       VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc); 👈
-
-section.center
-  pre(contenteditable=true): code.c
-    '
-      /* debug inspector APIs */
-      typedef struct rb_debug_inspector_struct rb_debug_inspector_t;
-      typedef VALUE (*rb_debug_inspector_func_t)(const rb_debug_inspector_t *, void *);
-
-      VALUE rb_debug_inspector_open(rb_debug_inspector_func_t func, void *data); 👈
-      VALUE rb_debug_inspector_frame_self_get(const rb_debug_inspector_t *dc, long index);
-      VALUE rb_debug_inspector_frame_class_get(const rb_debug_inspector_t *dc, long index);
-      VALUE rb_debug_inspector_frame_binding_get(const rb_debug_inspector_t *dc, long index);
-      VALUE rb_debug_inspector_frame_iseq_get(const rb_debug_inspector_t *dc, long index);
-      VALUE rb_debug_inspector_backtrace_locations(const rb_debug_inspector_t *dc);
 
 section.center
   pre(contenteditable=true): code.c
@@ -1419,7 +1148,7 @@ section.center
       }
 
 section.center data-background="#000"
-  h2.white TracePoint <span class="red fragment">(CRuby)</span>
+  h2.white TracePoint
 
 section.center
   p Provides Object-Oriented API for the functionality of <span class="red">Kernel#set_trace_func</span>.
@@ -1649,6 +1378,9 @@ section.center
           render_exception(request, exception) 👈
         end
       end
+
+section.center data-background-iframe="/error"
+  a(href="#" class="navigate-next") &gt;
 
 section.center
   pre(contenteditable=true): code.shell
