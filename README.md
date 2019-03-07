@@ -1,24 +1,6 @@
-# README
+# RailsConf Talks
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+- [2019][2019-conf]: [Resolve Errors Straight from the Error Pages][2019-talk]
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[2019-talk]: https://railsconf.com/program/sessions#session-750
+[2019-conf]: https://railsconf.com
