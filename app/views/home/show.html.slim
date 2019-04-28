@@ -11,6 +11,13 @@ section.center
 section.center
   a(href="https://github.com/gsamokovarov") github.com/gsamokovarov
 
+section.center
+  a href="https://receipt-bank.com"
+    img.inline src="https://www.receipt-bank.com/us/wp-content/themes/receipt-bank/dist/images/rb-logo.svg"
+
+section.center data-background-iframe="https://www.receipt-bank.com/us/"
+  a(href="#" class="navigate-next") &gt;
+
 section.center data-background="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/2000px-Flag_of_Bulgaria.svg.png"
   h2.white.shadow Bulgaria
   = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Bulgaria"
@@ -31,6 +38,10 @@ section.center
 section.center data-background="https://upload.wikimedia.org/wikipedia/commons/9/96/20101210_014809_LactobacillusBulgaricus.jpg"
   p.white.shadow Lactobacillus delbrueckii subsp. bulgaricus
   = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Lactobacillus_delbrueckii_subsp._bulgaricus"
+
+section.center data-background="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Bulgarian_yogurt.JPG/1920px-Bulgarian_yogurt.JPG"
+  p.white.shadow Lactobacillus delbrueckii subsp. bulgaricus
+  = copyright "Wikipedia", "https://bg.wikipedia.org/wiki/%D0%9A%D0%B8%D1%81%D0%B5%D0%BB%D0%BE_%D0%BC%D0%BB%D1%8F%D0%BA%D0%BE"
 
 section.center
   img.inline src=image_path("made_in_bulgaria.png")
@@ -142,6 +153,12 @@ section.center
 section.center data-background="https://user-images.githubusercontent.com/604618/50423897-7093d880-0864-11e9-9211-26056016fe5b.png"
 section.center data-background="https://user-images.githubusercontent.com/604618/50423900-725d9c00-0864-11e9-84f6-38b68838950f.png"
 section.center data-background="https://user-images.githubusercontent.com/604618/50423901-74275f80-0864-11e9-86b3-56428afbd5da.png"
+
+section.center data-background="#000"
+  p.white.fragment We're in the Unpacking Rails track 👈
+
+section.center data-background="#000"
+  p 📦
 
 section.center data-background="#000"
   h2.white Error Handling in <span class="red">Rails</span>
@@ -910,7 +927,7 @@ section.center
   h2 Rails 5.2
 
 section.center
-  pre.fragment(contenteditable=true): code.ruby
+  pre(contenteditable=true): code.ruby
     '
       class ActionDispatch::DebugExceptions
         def render_exception_with_web_console(request, exception)
@@ -1083,6 +1100,42 @@ section.center data-background="#000"
 section.center data-background-iframe="/error"
   a(href="#" class="navigate-next") &gt;
 
+section.center data-background="#F00"
+  h2.white Actionable Errors
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class PendingMigrationError < MigrationError
+        include ActiveSupport::ActionableError
+
+        action "Run pending migrations" do
+          ActiveRecord::Tasks::DatabaseTasks.migrate
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class PendingMigrationError < MigrationError
+        include ActiveSupport::ActionableError 👈
+
+        action "Run pending migrations" do
+          ActiveRecord::Tasks::DatabaseTasks.migrate
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class PendingMigrationError < MigrationError
+        include ActiveSupport::ActionableError
+
+        action "Run pending migrations" do 👈
+          ActiveRecord::Tasks::DatabaseTasks.migrate
+        end
+      end
+
 section.center
   pre(contenteditable=true): code.shell
     '
@@ -1100,7 +1153,50 @@ section.center
       $ rails middleware                        👇
       # ...
       use ActionDispatch::ShowExceptions
-      use WebConsole::Middleware 
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions 👈
+      use ActionDispatch::ActionableExceptions
+      # ...
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def call(env)
+          request = ActionDispatch::Request.new env
+          _, headers, body = response = @app.call(env)
+
+          response
+        rescue Exception => exception
+          invoke_interceptors(request, exception)
+          raise exception unless request.show_exceptions?
+          render_exception(request, exception)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def call(env)
+          request = ActionDispatch::Request.new env
+          _, headers, body = response = @app.call(env)
+
+          response
+        rescue Exception => exception
+          invoke_interceptors(request, exception)
+          raise exception unless request.show_exceptions?
+          render_exception(request, exception) 👈
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware                        👇
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
       use ActionDispatch::DebugExceptions
       use ActionDispatch::ActionableExceptions 👈
       # ...
@@ -1190,6 +1286,194 @@ section.center
             request.params[:action]
 
           redirect_to request.params[:location] 👈
+        end
+      end
+
+section.center data-background="#F00"
+  h2.white Strategies
+
+section.center data-background="#00F"
+  h2.white Middleware Checker
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActiveRecord::Migration::CheckPending
+        def initialize(app)
+          @app = app
+          @last_check = 0
+        end
+
+        def call(env)
+          mtime = ActiveRecord::Base.connection.migration_context.last_migration.mtime.to_i
+          if @last_check < mtime
+            ActiveRecord::Migration.check_pending!(ActiveRecord::Base.connection)
+            @last_check = mtime
+          end
+          @app.call(env)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActiveRecord::Migration::CheckPending
+        def initialize(app)
+          @app = app
+          @last_check = 0
+        end
+
+        def call(env)
+          mtime = ActiveRecord::Base.connection.migration_context.last_migration.mtime.to_i
+          if @last_check < mtime
+            ActiveRecord::Migration.check_pending!(ActiveRecord::Base.connection) 👈
+            @last_check = mtime
+          end
+          @app.call(env)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActiveRecord::Railtie < Rails::Railtie
+        initializer "active_record.migration_error" do
+          if config.active_record.delete(:migration_error) == :page_load
+            config.app_middleware.insert_after ::ActionDispatch::Callbacks,
+              ActiveRecord::Migration::CheckPending
+          end
+        end
+      end
+
+section.center
+  p.fragment Too much work 😕
+
+section.center data-background="#00F"
+  h2.white Act on Existing Error
+
+section.center
+  a href="https://github.com/rails/rails/pull/36071" rails/rails#36071
+
+section.center
+  p Work in Progress 🏗
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionMailbox::SetupError < ActionMailbox::Error
+        include ActiveSupport::ActionableError
+
+        def initialize(message = nil)
+          super(message || <<~MESSAGE)
+            Action Mailbox does not appear to be installed. Do you want to
+            install it now?
+          MESSAGE
+        end
+
+        action "Install now" do
+          Rails::Command.invoke "active_storage:install"
+          Rails::Command.invoke "action_mailbox:install"
+          Rails::Command.invoke "db:migrate"
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionMailbox::SetupError < ActionMailbox::Error
+        include ActiveSupport::ActionableError 👈
+
+        def initialize(message = nil)
+          super(message || <<~MESSAGE)
+            Action Mailbox does not appear to be installed. Do you want to
+            install it now?
+          MESSAGE
+        end
+
+        action "Install now" do
+          Rails::Command.invoke "active_storage:install"
+          Rails::Command.invoke "action_mailbox:install"
+          Rails::Command.invoke "db:migrate"
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionMailbox::SetupError < ActionMailbox::Error
+        include ActiveSupport::ActionableError
+
+        def initialize(message = nil)
+          super(message || <<~MESSAGE)
+            Action Mailbox does not appear to be installed. Do you want to
+            install it now?
+          MESSAGE
+        end
+
+        action "Install now" do 👈
+          Rails::Command.invoke "active_storage:install"
+          Rails::Command.invoke "action_mailbox:install"
+          Rails::Command.invoke "db:migrate"
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionMailbox::Engine < Rails::Engine
+        initializer "action_mailbox.setup" do
+          ActionDispatch::ActionableExceptions.on(
+            ActiveRecord::StatementInvalid
+          ) do |err|
+            if err.to_s.match?(InboundEmail.table_name)
+              raise SetupError
+            end
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionMailbox::Engine < Rails::Engine
+        initializer "action_mailbox.setup" do
+          ActionDispatch::ActionableExceptions.on( 👈
+            ActiveRecord::StatementInvalid
+          ) do |err|
+            if err.to_s.match?(ActionMailbox::InboundEmail.table_name)
+              raise ActionMailbox::SetupError
+            end
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionMailbox::Engine < Rails::Engine
+        initializer "action_mailbox.setup" do
+          ActionDispatch::ActionableExceptions.on(
+            ActiveRecord::StatementInvalid 👈
+          ) do |err|
+            if err.to_s.match?(ActionMailbox::InboundEmail.table_name)
+              raise ActionMailbox::SetupError
+            end
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionMailbox::Engine < Rails::Engine
+        initializer "action_mailbox.setup" do
+          ActionDispatch::ActionableExceptions.on(
+            ActiveRecord::StatementInvalid
+          ) do |err|
+            if err.to_s.match?(ActionMailbox::InboundEmail.table_name)
+              raise ActionMailbox::SetupError 👈
+            end
+          end
         end
       end
 
