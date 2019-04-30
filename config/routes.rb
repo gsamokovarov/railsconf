@@ -3,4 +3,5 @@ Rails.application.routes.draw do
 
   resource :error, only: :show
   resource :console, only: :show
+  resource :action, only: :show
 end
