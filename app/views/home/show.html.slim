@@ -26,34 +26,25 @@ section.center data-background="https://www.mapsland.com/maps/europe/bulgaria/la
   h2.shadow Bulgaria
   = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Bulgaria"
 
+section.center data-background="https://upload.wikimedia.org/wikipedia/commons/3/3c/Aleko_konstantinov.jpg"
+  h2.white.shadow Aleko Konstantinov
+  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Aleko_Konstantinov"
+
+section.center
+  img.inline src="http://www.bgbestseller.com/25-thickbox_default/-.jpg"
+  p To Chicago and Back
+  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/To_Chicago_and_Back"
+
 section.center data-background="http://www.norblomplumbing.com/img/Minneapolis.jpg"
   h2.white.shadow Minneapolis
   = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Minneapolis"
 
-section.center data-background="https://upload.wikimedia.org/wikipedia/commons/9/99/Asen_Jordanov.png"
-  h2.white.shadow Assen Jordanoff
-  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Assen_Jordanoff"
-
-section.center data-background="http://pantonov.com/thoughts/assen_jordanoff.img/Inv_38.jpg"
-  h2.white.shadow Jordaphone
-  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/Assen_Jordanoff"
+section.center data-background=asset_path("take_that_aleko.png")
+  = copyright "Google Maps", "https://maps.google.com"
 
 section.center
-  img.inline src=image_path("made_in_bulgaria.png")
-
-section.center data-background="https://upload.wikimedia.org/wikipedia/commons/9/90/Atanasoff-Berry_Computer.jpg"
-  h2.white.shadow John Atanasoff
-  = copyright "Wikipedia", "https://en.wikipedia.org/wiki/John_Vincent_Atanasoff#/media/File:Atanasoff-Berry_Computer.jpg"
-
-section.center
-  img.inline src=image_path("made_in_bulgaria.png")
-
-section.center data-background=image_path("photo-pravetz-82-1.jpg")
-  h2.white.shadow Правец 82
-  = copyright "Pravets", "https://en.wikipedia.org/wiki/Pravetz_computers"
-
-section.center
-  img.inline src=image_path("made_in_usa.png")
+  img.inline src=asset_path("to_minneapolis_and_back.png")
+  p To Minneapolis and Back
 
 section data-background="https://cdn2.wanderlust.co.uk/media/2637/articles-public-mineral-baths-sofia-bulgaria-dreamstime.jpg"
   h2.white.shadow Sofia
@@ -66,10 +57,6 @@ section data-background="https://cdn2.wanderlust.co.uk/media/2632/magazine-1335.
 section data-background="https://cdn2.wanderlust.co.uk/media/2633/magazine-2328.jpg"
   h2.white.shadow Sofia
   = copyright "Wanderlust", "https://www.wanderlust.co.uk/content/short-break-guide-to-sofia-bulgaria/"
-
-section data-background="https://upload.wikimedia.org/wikipedia/commons/a/ad/AlexanderNevskyCathedral-Sofia-6.jpg"
-  h2.white.shadow Sofia
-  = copyright "Alexander Nevsky Cathedral", "https://en.wikipedia.org/wiki/Alexander_Nevsky_Cathedral%2C_Sofia"
 
 section data-background="https://processflows.co.uk/wp-content/blogs.dir/1/files/2015/01/bpoFotolia_29276575_M-1.jpg"
   h2.white.shadow Sofia
@@ -117,7 +104,7 @@ section.center
   p Actionable errors let's you dispatch actions from Rails' error pages.
 
 section.center
-  h3 History
+  h3 Credits
   ul
     li <a href="https://github.com/vipulnsward">Vipul A M</a> in <a href="https://github.com/rails/rails/pull/26542">rails/rails#26542</a>
     li <a href="https://github.com/causztic">Yao Jie</a> in <a href="https://summerofcode.withgoogle.com/archive/2018/projects/6742288784949248/">GSoC 2018</a>
@@ -138,7 +125,7 @@ section.center data-background-iframe="/action"
   a(href="#" class="navigate-next") &gt;
 
 section.center data-background="#000"
-  p.white.fragment We're in the Unpacking Rails track 👈
+  p.white.fragment We're in the Unpacking Rails track 🤔
 
 section.center data-background="#000"
   p 📦
@@ -292,23 +279,13 @@ section.center
 
       Rack::Handler::WEBrick.run app
 
-section.center
-  p A Rack application is a Ruby object (not strictly a class) that responds to <span class="red">#call</span>.
-
-section.center
-  p It takes exactly one argument, the <span class="red">environment</span>.
-
-section.center
-  p Returns a triplet in the form of: [status, headers, body].
-
-section.center
-  p <a href="http://www.rubydoc.info/github/rack/rack/master/file/SPEC">RTFM</a>
-
 section.center data-background="#000"
   p.white The foundation of HTTP middlewares in the Ruby 🌍
 
+  = copyright "Rack Specification", "http://www.rubydoc.info/github/rack/rack/master/file/SPEC"
+
 section.center data-background="#000"
-  h2.white Rails Middleware
+  h2.white Rack Middleware
 
 section.center
   pre: code.ruby contenteditable=true
@@ -337,6 +314,9 @@ section.center
           ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']]
         end
       end
+
+section.center data-background="#000"
+  h2.white Rails Middleware Stack
 
 section.center
   img.inline src=image_path("browser_to_rails.svg")
@@ -377,7 +357,7 @@ section.center
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware
@@ -388,7 +368,7 @@ section.center
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware
@@ -480,6 +460,22 @@ section.center
           response
         rescue Exception => exception
           invoke_interceptors(request, exception)
+          raise exception unless request.show_exceptions? 👈
+          render_exception(request, exception)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def call(env)
+          request = ActionDispatch::Request.new env
+          _, headers, body = response = @app.call(env)
+
+          response
+        rescue Exception => exception
+          invoke_interceptors(request, exception)
           raise exception unless request.show_exceptions?
           render_exception(request, exception) 👈
         end
@@ -491,7 +487,7 @@ section.center data-background-iframe="/error"
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware
@@ -502,7 +498,7 @@ section.center
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions 👈
       use WebConsole::Middleware
@@ -518,7 +514,7 @@ section.center
     '
       class ActionDispatch::ShowExceptions
         FAILSAFE_RESPONSE = [500, { "Content-Type" => "text/plain" },
-          ["500 Internal Server Error\n" ...]
+          ["500 Internal Server Error\n"]]
 
         def initialize(app, exceptions_app)
           @app = app
@@ -529,6 +525,102 @@ section.center
           request = ActionDispatch::Request.new env
           @app.call(env)
         rescue Exception => exception
+          if request.show_exceptions?
+            render_exception(request, exception)
+          else
+            raise exception
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::ShowExceptions
+        FAILSAFE_RESPONSE = [500, { "Content-Type" => "text/plain" },
+          ["500 Internal Server Error\n"]]
+
+        def initialize(app, exceptions_app)
+          @app = app
+          @exceptions_app = exceptions_app 👈
+        end
+
+        def call(env)
+          request = ActionDispatch::Request.new env
+          @app.call(env)
+        rescue Exception => exception
+          if request.show_exceptions?
+            render_exception(request, exception)
+          else
+            raise exception
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::PublicExceptions
+        attr_accessor :public_path
+
+        def call(env)
+          request      = ActionDispatch::Request.new(env)
+          status       = request.path_info[1..-1].to_i
+          content_type = ...
+
+          render status, content_type,
+            status: status,
+            error: Rack::Utils::HTTP_STATUS_CODES.fetch(status, Rack::Utils::HTTP_STATUS_CODES[500])
+        end
+
+        private
+          def render(status, content_type, body)
+            path = "\#{public_path}/\#{status}.html"
+
+            render_format(status, "text/html", File.read(path))
+          end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::ShowExceptions
+        FAILSAFE_RESPONSE = [500, { "Content-Type" => "text/plain" },
+          ["500 Internal Server Error\n"]]
+
+        def initialize(app, exceptions_app)
+          @app = app
+          @exceptions_app = exceptions_app
+        end
+
+        def call(env)
+          request = ActionDispatch::Request.new env
+          @app.call(env) 👈
+        rescue Exception => exception
+          if request.show_exceptions?
+            render_exception(request, exception)
+          else
+            raise exception
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::ShowExceptions
+        FAILSAFE_RESPONSE = [500, { "Content-Type" => "text/plain" },
+          ["500 Internal Server Error\n"]]
+
+        def initialize(app, exceptions_app)
+          @app = app
+          @exceptions_app = exceptions_app
+        end
+
+        def call(env)
+          request = ActionDispatch::Request.new env
+          @app.call(env)
+        rescue Exception => exception 👈
           if request.show_exceptions?
             render_exception(request, exception)
           else
@@ -565,6 +657,19 @@ section.center data-background-iframe="/500"
   a(href="#" class="navigate-next") &gt;
 
 section.center
+  pre(contenteditable=true): code.html
+    '
+      # public/500.html
+      <title>We're sorry, but something went wrong (500)</title>
+
+      <div class="dialog">
+        <div>
+          <h1>We're sorry, but something went wrong.</h1>
+        </div>
+        <p>If you are the application owner check the logs for more information.</p>
+      </div>
+
+section.center
   pre(contenteditable=true): code.ruby
     '
       class ActionDispatch::ShowExceptions
@@ -591,7 +696,7 @@ section.center
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware
@@ -602,7 +707,7 @@ section.center
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware 👈
@@ -805,6 +910,31 @@ section.center
 
           status, headers, body = @app.call(env)
 
+          if (session = Session.from(Thread.current)) 👈 && acceptable_content_type?(headers)
+            template = Template.new(env, session)
+            body, headers = Injector.new(body, headers).inject(template.render("index"))
+          end
+
+          [ status, headers, body ]
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class WebConsole::Middleware
+        def call(env)
+          request = create_regular_or_whiny_request(env)
+          return @app.call(env) unless request.permitted?
+
+          if id = id_for_repl_session_update(request)
+            return update_repl_session(id, request)
+          elsif id = id_for_repl_session_stack_frame_change(request)
+            return change_stack_trace(id, request)
+          end
+
+          status, headers, body = @app.call(env)
+
           if (session = Session.from(Thread.current)) && acceptable_content_type?(headers) 👈
             template = Template.new(env, session)
             body, headers = Injector.new(body, headers).inject(template.render("index"))
@@ -842,7 +972,7 @@ section.center
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware
@@ -853,7 +983,7 @@ section.center
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware 👈
@@ -864,7 +994,7 @@ section.center
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware 👈 ⁉️
@@ -1086,9 +1216,20 @@ section.center
       end
 
 section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class PendingMigrationError < MigrationError
+        include ActiveSupport::ActionableError
+
+        action "Run pending migrations" do
+          ActiveRecord::Tasks::DatabaseTasks.migrate 👈
+        end
+      end
+
+section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware
@@ -1099,7 +1240,7 @@ section.center
 section.center
   pre(contenteditable=true): code.shell
     '
-      $ rails middleware                        👇
+      $ rails middleware
       # ...
       use ActionDispatch::ShowExceptions
       use WebConsole::Middleware
@@ -1140,17 +1281,6 @@ section.center
       end
 
 section.center
-  pre(contenteditable=true): code.shell
-    '
-      $ rails middleware                        👇
-      # ...
-      use ActionDispatch::ShowExceptions
-      use WebConsole::Middleware
-      use ActionDispatch::DebugExceptions
-      use ActionDispatch::ActionableExceptions 👈
-      # ...
-
-section.center
   pre(contenteditable=true): code.html
     '
       # action_dispatch/middleware/templates/rescues/diagnostics.html.erb
@@ -1173,6 +1303,17 @@ section.center
           <% end %>
         </div>
       <% end %>
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions
+      use ActionDispatch::ActionableExceptions 👈
+      # ...
 
 section.center
   pre(contenteditable=true): code.ruby
@@ -1238,6 +1379,16 @@ section.center
         end
       end
 
+section.center
+  h2.fragment 😰
+
+section.center
+  h2 😴
+
+section.center data-background="https://media1.giphy.com/media/p48F7LHfETH8Y/giphy.gif"
+section.center data-background="https://media.giphy.com/media/dEPGknRiEniec/giphy.gif"
+section.center data-background="https://media.giphy.com/media/126XZOZ4xUt0NG/giphy.gif"
+
 section.center data-background="#F00"
   h2.white Strategies
 
@@ -1301,10 +1452,10 @@ section.center data-background="#00F"
   h2.white Act on Existing Error
 
 section.center
-  a href="https://github.com/rails/rails/pull/36071" rails/rails#36071
+  p Work in Progress 🏗
 
 section.center
-  p Work in Progress 🏗
+  a href="https://github.com/rails/rails/pull/36071" rails/rails#36071
 
 section.center
   pre(contenteditable=true): code.ruby
@@ -1371,24 +1522,7 @@ section.center
     '
       class ActionMailbox::Engine < Rails::Engine
         initializer "action_mailbox.setup" do
-          ActionDispatch::ActionableExceptions.on(
-            ActiveRecord::StatementInvalid
-          ) do |err|
-            if err.to_s.match?(InboundEmail.table_name)
-              raise SetupError
-            end
-          end
-        end
-      end
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      class ActionMailbox::Engine < Rails::Engine
-        initializer "action_mailbox.setup" do
-          ActionDispatch::ActionableExceptions.on( 👈
-            ActiveRecord::StatementInvalid
-          ) do |err|
+          ActionDispatch::ActionableExceptions.on ActiveRecord::StatementInvalid do |err|
             if err.to_s.match?(ActionMailbox::InboundEmail.table_name)
               raise ActionMailbox::SetupError
             end
@@ -1401,9 +1535,7 @@ section.center
     '
       class ActionMailbox::Engine < Rails::Engine
         initializer "action_mailbox.setup" do
-          ActionDispatch::ActionableExceptions.on(
-            ActiveRecord::StatementInvalid 👈
-          ) do |err|
+          ActionDispatch::ActionableExceptions.on ActiveRecord::StatementInvalid do |err| 👈
             if err.to_s.match?(ActionMailbox::InboundEmail.table_name)
               raise ActionMailbox::SetupError
             end
@@ -1416,15 +1548,29 @@ section.center
     '
       class ActionMailbox::Engine < Rails::Engine
         initializer "action_mailbox.setup" do
-          ActionDispatch::ActionableExceptions.on(
-            ActiveRecord::StatementInvalid
-          ) do |err|
+          ActionDispatch::ActionableExceptions.on ActiveRecord::StatementInvalid do |err|
+            if err.to_s.match?(ActionMailbox::InboundEmail.table_name) 👈
+              raise ActionMailbox::SetupError
+            end
+          end
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionMailbox::Engine < Rails::Engine
+        initializer "action_mailbox.setup" do
+          ActionDispatch::ActionableExceptions.on ActiveRecord::StatementInvalid do |err|
             if err.to_s.match?(ActionMailbox::InboundEmail.table_name)
               raise ActionMailbox::SetupError 👈
             end
           end
         end
       end
+
+section.center
+  p.fragment Please, give us feedback here! 🙏
 
 section.center data-background="#000"
   h2.white.fragment TL;DR
@@ -1433,13 +1579,17 @@ section.center data-background="#000" data-background-transition="none"
   p.white We can improve the development experience!
 
 section.center data-background="#000" data-background-transition="none"
-  p.white Actionable errors are one step.
+  p.white Actionable errors are only a single step.
+
+section.center data-background="#000" data-background-transition="none"
+  p.white Can be useful for the Rails Conductor.
 
 section.center data-background="https://i.makeagif.com/media/9-17-2015/R3hDjT.gif" 
   p.white.shadow Nobody reads the docs!
 
 section.center
-  p gem install break
+  a href="https://github.com/gsamokovarov/break" gem install break
+  = copyright "binding.break", "https://github.com/gsamokovarov/break"
 
-section.center data-background="#000"
-  h1.white.fragment Thank you!
+section.center data-background="https://media.giphy.com/media/yoJC2GnSClbPOkV0eA/giphy.gif"
+  h1.white.shadow.fragment Thank you!
