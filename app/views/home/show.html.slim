@@ -127,139 +127,12 @@ section.center data-background-iframe="/action"
 section.center data-background="#000"
   p.white.fragment We're in the Unpacking Rails track 🤔
 
-section.center data-background="#000"
-  p 📦
-
 section.center data-background="https://thumbs.gfycat.com/SlowInfantileCusimanse-size_restricted.gif"
 
 section.center data-background="https://thumbs.gfycat.com/SlowInfantileCusimanse-size_restricted.gif"
   h2.white.shadow Error Handling in Rails
 
-section.center data-background="#000"
-  h2.white Exceptions
-
-section.center
-  p Errors in Ruby are represented by exceptions.
-
-section.center
-  p They stop the current execution flow, unless they are handled.
-
-section.center data-background="#000"
-  pre.white(contenteditable=true)
-    '
-      Exception
-        NoMemoryError
-        ScriptError
-          LoadError
-          NotImplementedError
-          SyntaxError
-        SecurityError
-        SignalException
-          Interrupt
-        StandardError -- default for rescue
-        SystemExit
-        SystemStackError
-        fatal –- impossible to rescue
-
-section.center data-background="#000"
-  pre.white(contenteditable=true)
-    '
-      StandardError -- default for rescue
-        ArgumentError
-        EncodingError
-        FiberError
-        IOError
-          EOFError
-        IndexError
-          KeyError
-          StopIteration
-        LocalJumpError
-        NameError
-          NoMethodError
-        RangeError
-          FloatDomainError
-        RegexpError
-        RuntimeError -- default for raise
-        SystemCallError
-          Errno::*
-        ThreadError
-        TypeError
-        ZeroDivisionError
-
-section.center data-background="#000"
-  h2.white Kernel#raise
-
-section.center
-  pre(contenteditable=true): code.ruby
-    '
-      raise
-      raise "Too lazy to define own error class..."
-      raise Error.new("Oops")
-      raise Error, "Oops", caller
-
-section.center data-background="#000"
-  h2.white Exception#backtrace
-
-section.center
-  pre(contenteditable=true): code.plain
-    '
-      Traceback (most recent call last):
-        2: from /Users/genadi/.rbenv/versions/2.5.0/bin/irb:11:in `&lt;main&gt;&apos;
-        1: from (irb):3
-      RuntimeError (Access denied)
-
-section.center data-background="#000"
-  h2.white Kernel#caller
-
-section.center
-  pre(contenteditable=true): code.shell
-    '
-      &gt;&gt; puts caller
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/workspace.rb:85:in `eval'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/workspace.rb:85:in `evaluate'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/context.rb:380:in `evaluate'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:491:in `block (2 levels) in eval_input'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:621:in `signal_status'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:488:in `block in eval_input'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:246:in `block (2 levels) in each_top_level_statement'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:232:in `loop'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:232:in `block in each_top_level_statement'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:231:in `catch'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/ruby-lex.rb:231:in `each_top_level_statement'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:487:in `eval_input'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:428:in `block in run'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:427:in `catch'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:427:in `run'
-      /Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb.rb:383:in `start'
-      /Users/genadi/.rbenv/versions/2.5.0/bin/irb:11:in `&lt;main&gt;'
-      =&gt; nil
-
-section.center
-  p Reflection of the current thread stack frames as readable text.
-
-section.center
-  p Represented as an Array of String objects.
-
-section.center data-background="#000"
-  h2.white Kernel#caller_locations
-
-section.center data-background="#000"
-  h2.white Exception#backtrace_locations
-
-section.center
-  p Represented as an Array of Thread::Backtrace::Location objects.
-
-section.center
-  pre(contenteditable=true): code.shell
-    '
-      &gt;&gt; caller_locations.first.path
-      =&gt; &quot;/Users/genadi/.rbenv/versions/2.5.0/lib/ruby/2.5.0/irb/workspace.rb&quot;
-      &gt;&gt; caller_locations.first.label
-      =&gt; &quot;eval&quot;
-      &gt;&gt; caller_locations.first.lineno
-      =&gt; 85
-
-section.center data-background="#000"
+section.center data-background="https://thumbs.gfycat.com/SlowInfantileCusimanse-size_restricted.gif"
   h2.white Rack
 
 section.center
@@ -275,6 +148,28 @@ section.center
 
       app = proc do |env|
         ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']]
+      end
+
+      Rack::Handler::WEBrick.run app
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      require 'rack'
+
+      app = proc do |env| 👈
+        ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']]
+      end
+
+      Rack::Handler::WEBrick.run app
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      require 'rack'
+
+      app = proc do |env|
+        ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']] 👈
       end
 
       Rack::Handler::WEBrick.run app
@@ -306,12 +201,40 @@ section.center
     '
       class Middleware
         def initialize(app)
+          @app = app 👈
+        end
+
+        def call(env)
+          # Pass control to the next request handler.
+          @app.call(env)
+        end
+      end
+
+section.center
+  pre: code.ruby contenteditable=true
+    '
+      class Middleware
+        def initialize(app)
+          @app = app
+        end
+
+        def call(env)
+          # Pass control to the next request handler.
+          @app.call(env) 👈
+        end
+      end
+
+section.center
+  pre: code.ruby contenteditable=true
+    '
+      class Middleware
+        def initialize(app)
           @app = app
         end
 
         def call(env)
           # Or stop the request here and return.
-          ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']]
+          ['200', {'Content-Type' => 'text/html'}, ['A barebones rack app.']] 👈
         end
       end
 
@@ -379,6 +302,9 @@ section.center
 section.center data-background="#F00"
   h2.white ActionDispatch::DebugExceptions
 
+section.center data-background-iframe="/error"
+  a(href="#" class="navigate-next") &gt;
+
 section.center
   pre(contenteditable=true): code.ruby
     '
@@ -410,9 +336,6 @@ section.center
           render_exception(request, exception)
         end
       end
-
-section.center
-  img.inline src=image_path("browser_to_rails.svg")
 
 section.center
   pre(contenteditable=true): code.ruby
@@ -508,6 +431,9 @@ section.center
 
 section.center data-background="#F00"
   h2.white ActionDispatch::ShowExceptions
+
+section.center data-background-iframe="/500"
+  a(href="#" class="navigate-next") &gt;
 
 section.center
   pre(contenteditable=true): code.ruby
@@ -670,6 +596,9 @@ section.center
       </div>
 
 section.center
+  img.inline src="https://i0.kym-cdn.com/photos/images/facebook/001/082/352/5ba.png"
+
+section.center
   pre(contenteditable=true): code.ruby
     '
       class ActionDispatch::ShowExceptions
@@ -714,6 +643,12 @@ section.center
       use ActionDispatch::DebugExceptions
       use ActionDispatch::ActionableExceptions
       # ...
+
+section.center data-background="#F00"
+  h2.white WebConsole::Middleware
+
+section.center data-background-iframe="/error"
+  a(href="#" class="navigate-next") &gt;
 
 section.center
   pre(contenteditable=true): code.ruby
@@ -1173,6 +1108,60 @@ section.center
         end
       end
 
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions
+      use ActionDispatch::ActionableExceptions
+      # ...
+
+section.center
+  pre(contenteditable=true): code.shell
+    '
+      $ rails middleware
+      # ...
+      use ActionDispatch::ShowExceptions
+      use WebConsole::Middleware
+      use ActionDispatch::DebugExceptions 👈
+      use ActionDispatch::ActionableExceptions
+      # ...
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def call(env)
+          request = ActionDispatch::Request.new env
+          _, headers, body = response = @app.call(env)
+
+          response
+        rescue Exception => exception
+          invoke_interceptors(request, exception)
+          raise exception unless request.show_exceptions?
+          render_exception(request, exception)
+        end
+      end
+
+section.center
+  pre(contenteditable=true): code.ruby
+    '
+      class ActionDispatch::DebugExceptions
+        def call(env)
+          request = ActionDispatch::Request.new env
+          _, headers, body = response = @app.call(env)
+
+          response
+        rescue Exception => exception
+          invoke_interceptors(request, exception) 👈
+          raise exception unless request.show_exceptions?
+          render_exception(request, exception)
+        end
+      end
+
 section.center data-background="#000"
   h2.white Application vs Framework Traces
 
@@ -1181,6 +1170,9 @@ section.center data-background-iframe="/error"
 
 section.center data-background="#F00"
   h2.white Actionable Errors
+
+section.center data-background-iframe="/migration"
+  a(href="#" class="navigate-next") &gt;
 
 section.center
   pre(contenteditable=true): code.ruby
@@ -1446,10 +1438,10 @@ section.center
       end
 
 section.center
-  p.fragment Too much work 😕
+  p.fragment Generic approach, but requires too much work... 😕
 
 section.center data-background="#00F"
-  h2.white Act on Existing Error
+  h2.white Act on Existing Errors
 
 section.center
   p Work in Progress 🏗
@@ -1570,7 +1562,9 @@ section.center
       end
 
 section.center
-  p.fragment Please, give us feedback here! 🙏
+  .fragment
+    p Please, give us feedback! 🙏
+    a href="https://github.com/rails/rails/pull/36071" rails/rails#36071
 
 section.center data-background="#000"
   h2.white.fragment TL;DR
